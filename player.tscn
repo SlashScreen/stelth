@@ -6,7 +6,7 @@
 [sub_resource type="CubeMesh" id=1]
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 50, 50 )
+extents = Vector2( 32.0293, 31.9656 )
 
 [node name="player" type="RigidBody2D"]
 mode = 2
@@ -15,7 +15,7 @@ linear_damp = 10.0
 script = ExtResource( 1 )
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-scale = Vector2( 50, 50 )
+scale = Vector2( 32, 32 )
 mesh = SubResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
