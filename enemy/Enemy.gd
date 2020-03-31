@@ -12,6 +12,7 @@ var seenTimer = 0
 var searchTimer = SEARCHING_TIMER
 var target = Vector2()
 var go = Vector2()
+var path
 
 func _process(delta):
 	$Cast.set_cast_to(to_local(player.get_position()))
@@ -54,8 +55,9 @@ func _process(delta):
 	
 	print(state)
 	#MOVEMENT LOOP
-	
+	path = get_parent().get_node("Nav").get_simple_path(get_position(),target)
+	for i in path:
+		go = get_position().direction_to(i).normalized()
 	#TODO: Replace this with ASTAR
-	go = get_position().direction_to(target).normalized()
 	apply_central_impulse(go*SPEED)
 	
