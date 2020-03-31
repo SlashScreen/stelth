@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://floor.jpeg" type="Texture" id=2]
+[ext_resource path="res://test_object.tscn" type="PackedScene" id=3]
+[ext_resource path="res://enemy/Enemy.tscn" type="PackedScene" id=4]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 522.161, 303.072 )
+texture = ExtResource( 2 )
+
+[node name="test_object" parent="." instance=ExtResource( 3 )]
+position = Vector2( 385.144, 369.442 )
+scale = Vector2( 7.08167, 5.03135 )
+
+[node name="test_object" parent="test_object" instance=ExtResource( 3 )]
+position = Vector2( 49.5323, -33.5514 )
+
+[node name="player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 65.7266, 76.681 )
+
+[node name="Enemy" parent="." instance=ExtResource( 4 )]
+position = Vector2( 575.148, 390.624 )
