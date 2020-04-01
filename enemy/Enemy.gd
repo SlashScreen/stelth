@@ -5,10 +5,12 @@ onready var target = get_position()
 export var state = "IDLE"
 export var last_seen = Vector2()
 export var suspicion_level = 0
+export var FOV = 90
 const CURIOUS_TIMER_MAX = 5
 const SEARCHING_TIMER = 15
 const SNAP_DIST = 40
 const SPEED = 40
+var sightDistance = 300
 var angle = 0
 var seenTimer = 0
 var searchTimer = SEARCHING_TIMER
@@ -20,7 +22,7 @@ func _process(delta):
 	
 	#BEHAVIOR SWITCH
 	
-	if $Cast.get_collider() == player:
+	if canSeePlayer():
 		if state == "IDLE":
 			#If guard sees player, become CURIOUS
 			print("found- curious")
@@ -63,3 +65,10 @@ func _process(delta):
 
 	apply_central_impulse(go*SPEED)
 	
+
+func canSeePlayer():
+	$Cast.set_cast_to(to_local(player.get_position()))
+	
+	var workingAngle = (Vector2().angle_to_point(to_local(player.get_position())))*(180/PI)
+	
+	return $Cast.get_collider() == player and ((angle-(FOV/2)) < (workingAngle) and (workingAngle) < (angle+(FOV/2))) and (get_position().distance_to(player.get_position()) <= sightDistance)
