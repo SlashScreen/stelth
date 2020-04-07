@@ -24,6 +24,8 @@ func _process(delta):
 		speed = WALKING_SPEED
 		$Sightline.hide()
 		$Camera.zoom = Vector2(2,2)
+	if Input.is_action_just_pressed("collect") and get_parent().get_node("item").in_range(self):
+		get_parent().get_node("item").hold()
 	if Input.is_action_just_pressed("roll"):
 		apply_central_impulse(direction*ROLL_SPEED)
 	else:
