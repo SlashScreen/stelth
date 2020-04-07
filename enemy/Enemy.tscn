@@ -8,6 +8,7 @@
 extents = Vector2( 32.0443, 31.8176 )
 
 [node name="Enemy" type="RigidBody2D"]
+collision_mask = 17
 mode = 2
 gravity_scale = 0.0
 linear_damp = 10.0

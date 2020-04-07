@@ -62,6 +62,7 @@ func _process(delta):
 	path = get_parent().get_node("Nav").get_simple_path(get_position(),target)
 	if get_position().distance_to(path[1]) > SNAP_DIST:
 		go = get_position().direction_to(path[1]).normalized()
+		angle = get_position().angle_to_point(go) * (180/PI)
 
 	apply_central_impulse(go*SPEED)
 	

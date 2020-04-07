@@ -9,6 +9,7 @@
 extents = Vector2( 32.0293, 31.9656 )
 
 [node name="player" type="RigidBody2D"]
+collision_layer = 17
 mode = 2
 gravity_scale = 0.0
 linear_damp = 10.0
