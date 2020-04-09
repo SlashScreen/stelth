@@ -57,7 +57,7 @@ func _process(delta):
 			state = "CURIOUS" #curious
 			#TODO: connenct to other guards
 	
-	print(state)
+	#print(state)
 	#MOVEMENT LOOP
 	path = get_parent().get_node("Nav").get_simple_path(get_position(),target)
 	if get_position().distance_to(path[1]) > SNAP_DIST:

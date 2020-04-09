@@ -10,6 +10,7 @@
 [node name="Nav" type="Navigation2D" parent="."]
 
 [node name="TileMap" type="TileMap" parent="Nav"]
+scale = Vector2( 1.1, 1.1 )
 tile_set = ExtResource( 5 )
 collision_friction = 0.0
 format = 1
