@@ -44,5 +44,7 @@ func _process(delta):
 	#Set previous direction: (where player pointing)
 	if go != Vector2(0,0):
 		direction = go.normalized()
+	#win condition
+	
 	#reset go variable
 	go = Vector2()
