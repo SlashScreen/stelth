@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://player.gd" type="Script" id=1]
 [ext_resource path="res://Light Tex.png" type="Texture" id=2]
+[ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=3]
 
 [sub_resource type="CubeMesh" id=1]
 
@@ -35,3 +36,9 @@ shadow_enabled = true
 current = true
 zoom = Vector2( 2, 2 )
 smoothing_enabled = true
+
+[node name="HUD" parent="Camera" instance=ExtResource( 3 )]
+margin_left = -968.102
+margin_top = -549.858
+margin_right = -968.102
+margin_bottom = -549.858
