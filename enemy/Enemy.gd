@@ -10,7 +10,7 @@ const CURIOUS_TIMER_MAX = 5
 const SEARCHING_TIMER = 15
 const SNAP_DIST = 10
 const SPEED = 40
-var sightDistance = 300
+var sightDistance = 1000
 var angle = 0
 var seenTimer = 0
 var searchTimer = SEARCHING_TIMER
@@ -66,7 +66,7 @@ func _process(delta):
 		go = Vector2()
 	
 	angle = Vector2().angle_to_point(go) * (180/PI)
-	#$protocone.set_rotation(Vector2().angle_to_point(go)+180)
+	$Flashlight.set_rotation(Vector2().angle_to_point(go))
 	#print(angle)
 
 	apply_central_impulse(go*SPEED)

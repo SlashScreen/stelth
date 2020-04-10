@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://enemy/Enemy.gd" type="Script" id=1]
+[ext_resource path="res://assets/Guard_Flashlight_v1.png" type="Texture" id=2]
 
 [sub_resource type="CubeMesh" id=1]
 
@@ -29,3 +30,8 @@ cast_to = Vector2( 50, 0 )
 visible = false
 position = Vector2( -2.76862, 0 )
 polygon = PoolVector2Array( 4.69119, -0.0793152, 181.884, -87.2916, 187.422, 89.9017 )
+
+[node name="Flashlight" type="Light2D" parent="."]
+texture = ExtResource( 2 )
+texture_scale = 10.0
+shadow_enabled = true
