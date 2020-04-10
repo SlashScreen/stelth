@@ -8,7 +8,7 @@ export var suspicion_level = 0
 export var FOV = 90
 const CURIOUS_TIMER_MAX = 5
 const SEARCHING_TIMER = 15
-const SNAP_DIST = 40
+const SNAP_DIST = 10
 const SPEED = 40
 var sightDistance = 300
 var angle = 0
@@ -62,13 +62,14 @@ func _process(delta):
 	path = get_parent().get_node("Nav").get_simple_path(get_position(),target)
 	if get_position().distance_to(path[1]) > SNAP_DIST:
 		go = get_position().direction_to(path[1]).normalized()
+	else:
+		go = Vector2()
 	
 	angle = Vector2().angle_to_point(go) * (180/PI)
 	#$protocone.set_rotation(Vector2().angle_to_point(go)+180)
 	#print(angle)
 
 	apply_central_impulse(go*SPEED)
-	
 
 func canSeePlayer():
 	$Cast.set_cast_to(to_local(player.get_position()))
