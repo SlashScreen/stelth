@@ -1,4 +1,4 @@
-extends Control
+extends CanvasLayer
 
 onready var timer = 0
 var won = false
@@ -10,7 +10,9 @@ func _ready():
 func _process(delta):
 	if not won:
 		timer += delta
-		get_node("Timer").set_text(str(timer))
+		get_node("Timer").set_text(str(round(timer)))
 
 func _on_game_won():
 	won = true
+	$Darkscreen.show()
+	$Wintext.show()
