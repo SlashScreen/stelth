@@ -53,7 +53,7 @@ func _process(delta):
 				can_control = true
 		#Rolling and movement- Rolling overrides normal movement.
 		#TODO: add movement cooldown after roll? 
-		if Input.is_action_just_pressed("roll") and can_control:
+		if Input.is_action_just_pressed("roll") and can_control and not hold:
 			#perhaps change roll impulse to be a constant force for ROLL-TIMER_MAX seconds?
 			apply_central_impulse(direction*ROLL_SPEED)
 			can_control = false
