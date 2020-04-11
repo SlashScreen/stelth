@@ -23,54 +23,42 @@ func _process(delta):
 	
 	#BEHAVIOR SWITCH
 	
+	#behavior that doesn't involve player detection
+	match state:
+		"IDLE":
+			angle = rad2deg(Vector2().angle_to_point(go))
+		"CURIOUS","FOUND":
+			if is_at_target():
+				angle += 1
+			else:
+				angle = rad2deg(get_position().angle_to_point(target))
+	#behavior that *does* involve player detection
 	if canSeePlayer():
-		if state == "IDLE":
-			var ppos = player.get_position()
-			var dist = to_global(get_position()).distance_to(to_global(ppos))
-			if (dist/sightDistance) <= (1.0/3.0):
-				print("Immediate find")
-				state = "FOUND"
-				target = ppos
-			elif (dist/sightDistance) <= (2.0/3.0):
-				print("Investigate")
+		match state:
+			"IDLE":
+				#TODO: Reimplement flashlight distance
 				state = "CURIOUS"
-				target = ppos
-			elif (dist/sightDistance) > (2.0/3.0):
-				#TODO: add "huh?"
-				print("Huh?...")
-				angle = get_position().angle_to_point(ppos) * (180/PI)
-		if state == "CURIOUS":
-			#If state is CURIOUS and still can see player
-			target = player.get_position() #set last seen position
-			if seenTimer < CURIOUS_TIMER_MAX: #count up timer if less than max
-				seenTimer += delta
-			else: #if is max, guard has found player
-				#TODO: Alert other guards
-				print("Found player")
-				seenTimer = 0
-				state = "FOUND"
-		if state == "FOUND":
-			#If state found and guard can see player
-			#Set target position and reset timer
-			target = player.get_position()
-			searchTimer = SEARCHING_TIMER
-	else: 
-		#If guard cannot see player directly
-		if state == "CURIOUS":
-			#If state is curious
-			if seenTimer >= 0:# and get_position().distance_to(target) < SNAP_DIST: #Count down timer is > 0
-				seenTimer -= delta
-			else: #otherwise
-				print("lost player, now idle")
-				alert+=1
-				seenTimer = 0 #reset timer
-				state = "IDLE" #lost player 
-				target = get_position()
-				suspicion_level += 1 #raise alert level
-		if state == "FOUND": #if found player but not in sight
-			print("Lost sight, mode to curious")
-			state = "CURIOUS" #curious
-			#TODO: connenct to other guards
+			"CURIOUS":
+				if searchTimer <= CURIOUS_TIMER_MAX:
+					searchTimer += delta
+				else:
+					state = "FOUND"
+				target = player.get_position()
+			"FOUND":
+				seenTimer = SEARCHING_TIMER
+				target = player.get_position()
+	else:
+		match state:
+			"CURIOUS":
+				if searchTimer > 0:
+					searchTimer -= delta
+				else:
+					state = "IDLE"
+			"FOUND":
+				if seenTimer > 0:
+					seenTimer -= delta
+				else:
+					state = "CURIOUS"
 	
 	#print(state)
 	#MOVEMENT LOOP
@@ -80,16 +68,16 @@ func _process(delta):
 	else:
 		go = Vector2()
 	
-	angle = rad2deg(Vector2().angle_to_point(go))
+	
 	$Flashlight.swing_to_direction(deg2rad(angle))#set_rotation(deg2rad(angle))
 	#print(angle)
-
+	print(state)
 	apply_central_impulse(go*SPEED)
 
 func canSeePlayer():
 	$Cast.set_cast_to(to_local(player.get_position()))
 	
-	var workingAngle = (Vector2().angle_to_point(to_local(player.get_position())))*(180/PI)
+	var workingAngle = rad2deg(Vector2().angle_to_point(to_local(player.get_position())))
 	
 	return $Cast.get_collider() == player and ((angle-(FOV/2)) < (workingAngle) and (workingAngle) < (angle+(FOV/2))) and (get_position().distance_to(player.get_position()) <= sightDistance)
 
@@ -99,3 +87,6 @@ func registerNoise(pathlength, volume, position):
 	if pathlength <= volume:
 		state = "CURIOUS"
 		target = position
+
+func is_at_target():
+	return get_position().distance_to(target) < SNAP_DIST

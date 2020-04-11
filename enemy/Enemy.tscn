@@ -39,3 +39,5 @@ texture = ExtResource( 2 )
 texture_scale = 10.0
 shadow_enabled = true
 script = ExtResource( 3 )
+
+[node name="Timer" type="Timer" parent="."]
