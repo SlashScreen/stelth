@@ -56,6 +56,7 @@ func _process(delta):
 		if Input.is_action_just_pressed("roll") and can_control and not hold:
 			#perhaps change roll impulse to be a constant force for ROLL-TIMER_MAX seconds?
 			apply_central_impulse(direction*ROLL_SPEED)
+			$Rollnoise.play_noise()
 			can_control = false
 		else:
 			apply_central_impulse(go.normalized()*speed)

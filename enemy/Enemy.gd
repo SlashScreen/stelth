@@ -6,6 +6,7 @@ export var state = "IDLE"
 export var last_seen = Vector2()
 export var suspicion_level = 0
 export var FOV = 90
+export var alert = 0
 const CURIOUS_TIMER_MAX = 5
 const SEARCHING_TIMER = 15
 const SNAP_DIST = 10
@@ -45,6 +46,7 @@ func _process(delta):
 				seenTimer += delta
 			else: #if is max, guard has found player
 				#TODO: Alert other guards
+				print("Found player")
 				seenTimer = 0
 				state = "FOUND"
 		if state == "FOUND":
@@ -59,11 +61,14 @@ func _process(delta):
 			if seenTimer >= 0: #Count down timer is > 0
 				seenTimer -= delta
 			else: #otherwise
+				print("lost player, now idle")
+				alert+=1
 				seenTimer = 0 #reset timer
 				state = "IDLE" #lost player 
 				target = get_position()
 				suspicion_level += 1 #raise alert level
 		if state == "FOUND": #if found player but not in sight
+			print("Lost sight, mode to curious")
 			state = "CURIOUS" #curious
 			#TODO: connenct to other guards
 	
@@ -76,7 +81,7 @@ func _process(delta):
 		go = Vector2()
 	
 	angle = rad2deg(Vector2().angle_to_point(go))
-	$Flashlight.set_rotation(deg2rad(angle))
+	$Flashlight.swing_to_direction(deg2rad(angle))#set_rotation(deg2rad(angle))
 	#print(angle)
 
 	apply_central_impulse(go*SPEED)
@@ -87,3 +92,6 @@ func canSeePlayer():
 	var workingAngle = (Vector2().angle_to_point(to_local(player.get_position())))*(180/PI)
 	
 	return $Cast.get_collider() == player and ((angle-(FOV/2)) < (workingAngle) and (workingAngle) < (angle+(FOV/2))) and (get_position().distance_to(player.get_position()) <= sightDistance)
+
+func registerNoise(pathlength, volume, position):
+	print("Heard noise at " + str(position) + " " + str(pathlength) + " units away")

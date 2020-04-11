@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/shuf.ogg-9114374106d979a8e810235480d0f071.oggstr"
+
+[deps]
+
+source_file="res://assets/sfx/shuf.ogg"
+dest_files=[ "res://.import/shuf.ogg-9114374106d979a8e810235480d0f071.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

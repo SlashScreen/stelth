@@ -6,5 +6,5 @@ func swing_to_direction(angle): #Degrees
 	next_angle = angle
 
 func _process(delta):
-	#gradually shift current rotation towards next angle
+	set_rotation(get_rotation() + ( (next_angle - get_rotation()) / 2) )
 	pass
