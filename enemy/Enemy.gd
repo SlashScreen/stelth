@@ -24,10 +24,20 @@ func _process(delta):
 	
 	if canSeePlayer():
 		if state == "IDLE":
-			#If guard sees player, become CURIOUS
-			print("found- curious")
-			state = "CURIOUS"
-			target = player.get_position()
+			var ppos = player.get_position()
+			var dist = to_global(get_position()).distance_to(to_global(ppos))
+			if (dist/sightDistance) <= (1.0/3.0):
+				print("Immediate find")
+				state = "FOUND"
+				target = ppos
+			elif (dist/sightDistance) <= (2.0/3.0):
+				print("Investigate")
+				state = "CURIOUS"
+				target = ppos
+			elif (dist/sightDistance) > (2.0/3.0):
+				#TODO: add "huh?"
+				print("Huh?...")
+				angle = get_position().angle_to_point(ppos) * (180/PI)
 		if state == "CURIOUS":
 			#If state is CURIOUS and still can see player
 			target = player.get_position() #set last seen position
@@ -65,8 +75,8 @@ func _process(delta):
 	else:
 		go = Vector2()
 	
-	angle = Vector2().angle_to_point(go) * (180/PI)
-	$Flashlight.set_rotation(Vector2().angle_to_point(go))
+	angle = rad2deg(Vector2().angle_to_point(go))
+	$Flashlight.set_rotation(deg2rad(angle))
 	#print(angle)
 
 	apply_central_impulse(go*SPEED)
