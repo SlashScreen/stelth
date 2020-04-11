@@ -58,7 +58,7 @@ func _process(delta):
 		#If guard cannot see player directly
 		if state == "CURIOUS":
 			#If state is curious
-			if seenTimer >= 0: #Count down timer is > 0
+			if seenTimer >= 0:# and get_position().distance_to(target) < SNAP_DIST: #Count down timer is > 0
 				seenTimer -= delta
 			else: #otherwise
 				print("lost player, now idle")
@@ -94,4 +94,8 @@ func canSeePlayer():
 	return $Cast.get_collider() == player and ((angle-(FOV/2)) < (workingAngle) and (workingAngle) < (angle+(FOV/2))) and (get_position().distance_to(player.get_position()) <= sightDistance)
 
 func registerNoise(pathlength, volume, position):
+	#Volume is how far away the guard needs to be to have heard it
 	print("Heard noise at " + str(position) + " " + str(pathlength) + " units away")
+	if pathlength <= volume:
+		state = "CURIOUS"
+		target = position

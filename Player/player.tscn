@@ -41,3 +41,4 @@ smoothing_enabled = true
 [node name="HUD" parent="Camera" instance=ExtResource( 3 )]
 
 [node name="Rollnoise" parent="." instance=ExtResource( 4 )]
+volume = 500
