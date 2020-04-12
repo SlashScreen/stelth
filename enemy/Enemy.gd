@@ -1,35 +1,58 @@
 extends RigidBody2D
+#This is a general guard that will be the primary enemy of the game.
 
-onready var player = get_parent().get_node("player")
-onready var target = get_position()
-export var state = "IDLE"
+#onready variables
+onready var player = get_parent().get_node("player") #Reference to player
+onready var target: Vector2 = get_position() #Where the guard is planning to go next.
+#Public variables
+export var state = "IDLE" #State machine. States are "IDLE","HUH","CURIOUS","FOUND"
 export var last_seen = Vector2()
-export var suspicion_level = 0
-export var FOV = 90
-export var alert = 0
-export var flashlightSwingCurve: Curve
+export var FOV = 90 #FOV of vision cone. Degrees.
+export var alert = 0 #ALERT LEVEL: How wary guards are. Alert affects: whether guards will enter the "huh?" state, how long the player has before they are spotted.
+export var flashlightSwingCurve: Curve #Flashlight motion curve
+#Constans
 const CURIOUS_TIMER_MAX = 7
 const SEARCHING_TIMER = 15
 const HUH_MAX = 5
 const SNAP_DIST = 10
 const SPEED = 40
+#Internal variables
 var sightDistance = 1000
-var angle = 0
+var angle = 0 #direction the guard is looking in. Degrees.
 var seenTimer = 0
 var searchTimer = SEARCHING_TIMER
 var huhTimer = 0
-var go = Vector2()
+var go = Vector2() #direction to go in.
 var flashlightInterp = 0
 var flashlightSpeed = .25
 var flashlightAmplitude = 2
-var path
+var path #path to follow.
 
 func _process(delta):
 	$Cast.set_cast_to(to_local(player.get_position()))
 	
 	#BEHAVIOR SWITCH
 	
+	#BEHAVIOR BREAKDOWN:
+	#If the player is visible, or other stimulus is applied, the
+	#guard will investigate the stmulus. If the player stays too long
+	#in the cone of vision, or is too close to the guard, the guard will
+	#become aware of the player's presence, alert other guards, and persue
+	#the player. If the player enters the cone of vision, or a faint noise is heard,
+	#The guard will simply point the flashlight in the stimulus' genral direction
+	#for a few seconds.
+	#The guard normally sticks to a patrol path, but will stop or break the path if
+	#any stimulus is applied. I do not plan to add more complex social behavior.
+	
+	#TODO:
+	#Alert other guards
+	#Patrol path.
+	#Talk to other gaurds, just casually?
+	#Implemennt noise stimulus.
+	#Attack, both tackle and tazer 
+	
 	#behavior that doesn't involve player detection
+	
 	match state:
 		"IDLE":
 			#Point in the driection that the enemy is moving
@@ -39,18 +62,12 @@ func _process(delta):
 			#If it is at the target, swing flashlight around in search of the player
 			#If not, point towards target
 			if is_at_target():
-				#This controls the swinging animation by interpolating across a curve object
-				flashlightInterp += delta*flashlightSpeed
-				if flashlightInterp > 1:
-					flashlightInterp = 0
-				angle += flashlightSwingCurve.interpolate(flashlightInterp) * flashlightAmplitude
+				swingFlashlight(delta)
 			else:
 				angle = rad2deg(get_position().angle_to_point(target))
 		"HUH":
-			flashlightInterp += delta*flashlightSpeed
-			if flashlightInterp > 1:
-				flashlightInterp = 0
-			angle += flashlightSwingCurve.interpolate(flashlightInterp) * flashlightAmplitude
+			
+			swingFlashlight(delta)
 			if huhTimer <= HUH_MAX:
 				huhTimer += delta
 			else:
@@ -63,12 +80,18 @@ func _process(delta):
 		print(str(distance/sightDistance) + " " + state + " " + str(alert))
 		match state:
 			"IDLE":
-				#If the guard sees the player, go into curious mode
-				#If the player is right in front of the guard, then the player is found immediately
+				#This changes behavior based on how far away the player is from the guard.
+				#If they are greater than 2/3 of the sight distance away from the guard, enter the "HUH" state, UNLESS they are already wary.
+				#Between 1/3 and 2/3 enters CURIOUS mode.
+				#If < 1/3, the guard immediatley "finds" the player.
 				if distance/sightDistance > (2.0/3.0):
-					state = "HUH"
-					angle = rad2deg(get_position().angle_to_point(ppos))
-					huhTimer = 0
+					if alert == 0:
+						state = "HUH"
+						angle = rad2deg(get_position().angle_to_point(ppos)) #Whete the guard "Thought I saw something"
+						huhTimer = 0 #Reset HUH timer
+					else:
+						state = "CURIOUS"
+						searchTimer = 0
 				elif distance/sightDistance <= (2.0/3.0) and distance/sightDistance >= (1.0/3.0):
 					state = "CURIOUS"
 					searchTimer = 0
@@ -76,7 +99,8 @@ func _process(delta):
 					state = "FOUND"
 			"HUH":
 				#HUH means the guard is looking at where they Think they saw the player
-				print(distance/sightDistance)
+				#This is basically identical to the IDLE block, except that there is no "huh?" mode, for obvious reasons
+				
 				if distance/sightDistance <= (2.0/3.0) and distance/sightDistance >= (1.0/3.0):
 					state = "CURIOUS"
 					searchTimer = 0
@@ -107,6 +131,7 @@ func _process(delta):
 				#TODO: Set alert level based on how close the player was to discovery?
 				if is_at_target() and searchTimer > 0:
 					searchTimer -= delta
+					print(searchTimer)
 				else:
 					state = "IDLE"
 			"FOUND":
@@ -122,30 +147,64 @@ func _process(delta):
 	
 	#print(state)
 	#MOVEMENT LOOP
+	
+	#HOW DOES THIS WORK?
+	#It calculates the path to the Target variable.
+	#To follow the path, it uses the "go" variable.
+	#go is basically the normalized direction to the next point on the path.
+	#The rigidbody is then provided an impulse to move in "go" direction.
+	
+	#Calculate path to taget using the navigator node
 	path = get_parent().get_node("Nav").get_simple_path(get_position(),target)
+	#if the enemy is close enough to the next point (Close enough defined by SNAP_DIST),
+	#don't bother moving.
+	#But if not, calculate go. 
 	if get_position().distance_to(path[1]) > SNAP_DIST:
 		go = get_position().direction_to(path[1]).normalized()
 	else:
 		go = Vector2()
 	
-	
+	#tell the flashlight to do its smoothing thing.
 	$Flashlight.swing_to_direction(deg2rad(angle))#set_rotation(deg2rad(angle))
-	#print(angle)
+	#impulse rigidbody.
 	apply_central_impulse(go*SPEED)
 
 func canSeePlayer():
+	#Determines whether or not the enemy can see the player.
+	
+	#HOW IT WORKS:
+	#A raycast node goes from the enemy to the player.
+	#This function then checks 3 things:
+	#Is the player within sightDistance to the enemy?
+	#Is the raycast hitting the player?
+	#Is the raycast direction within the view cone (defined by variable "angle" and "FOV")
+	#If all of these things are true, the player is visible.
+	
+	#Set cast
 	$Cast.set_cast_to(to_local(player.get_position()))
-	
+	#Calculate the direction of the raycast node.
 	var workingAngle = rad2deg(Vector2().angle_to_point(to_local(player.get_position())))
-	
+	#Check all 3 of those things mentioned above.
 	return $Cast.get_collider() == player and ((angle-(FOV/2)) < (workingAngle) and (workingAngle) < (angle+(FOV/2))) and (get_position().distance_to(player.get_position()) <= sightDistance)
 
 func registerNoise(pathlength, volume, position):
-	#Volume is how far away the guard needs to be to have heard it
+	#volume is how far away the guard needs to be to have heard it
+	#pathlength is how far away the noise is
+	#position is where the noise originated from
 	print("Heard noise at " + str(position) + " " + str(pathlength) + " units away")
 	if pathlength <= volume:
 		state = "CURIOUS"
 		target = position
 
 func is_at_target():
+	#Determines whether the enemy is on top of the target position.
 	return get_position().distance_to(target) < SNAP_DIST
+
+func swingFlashlight(delta):
+	#This controls the swinging animation by interpolating across a curve object
+	#Call stack NTS: This delta variable originates from _process(delta).
+	flashlightInterp += delta*flashlightSpeed #increment lerp variable
+	if flashlightInterp > 1: #if greater than 0, reset
+		flashlightInterp = 0
+	#increment angle based on curve interpolation
+	angle += flashlightSwingCurve.interpolate(flashlightInterp) * flashlightAmplitude
