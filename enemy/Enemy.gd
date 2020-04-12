@@ -7,6 +7,7 @@ export var last_seen = Vector2()
 export var suspicion_level = 0
 export var FOV = 90
 export var alert = 0
+export var flashlightSwingCurve: Curve
 const CURIOUS_TIMER_MAX = 5
 const SEARCHING_TIMER = 15
 const SNAP_DIST = 10
@@ -16,6 +17,9 @@ var angle = 0
 var seenTimer = 0
 var searchTimer = SEARCHING_TIMER
 var go = Vector2()
+var flashlightInterp = 0
+var flashlightSpeed = .25
+var flashlightAmplitude = 2
 var path
 
 func _process(delta):
@@ -32,8 +36,10 @@ func _process(delta):
 			#If it is at the target, swing flashlight around in search of the player
 			#If not, point towards target
 			if is_at_target():
-				#TODO add swinging animation with curves
-				angle += 1
+				flashlightInterp += delta*flashlightSpeed
+				if flashlightInterp > 1:
+					flashlightInterp = 0
+				angle += flashlightSwingCurve.interpolate(flashlightInterp) * flashlightAmplitude
 			else:
 				angle = rad2deg(get_position().angle_to_point(target))
 	#behavior that *does* involve player detection
@@ -73,7 +79,7 @@ func _process(delta):
 				#If timer was at 0, then return back to idle
 				
 				#TODO: Set alert level based on how close the player was to discovery?
-				if searchTimer > 0:
+				if is_at_target() and searchTimer > 0:
 					searchTimer -= delta
 				else:
 					state = "IDLE"

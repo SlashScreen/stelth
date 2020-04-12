@@ -1,8 +1,6 @@
 [gd_resource type="CurveTexture" load_steps=2 format=2]
 
-[sub_resource type="Curve" id=1]
-min_value = -1.0
-_data = [ Vector2( 0, -0.654546 ), 0.0, 5.29091, 0, 0, Vector2( 1, -0.618182 ), -5.79908, 0.0, 0, 0 ]
+[ext_resource path="res://test_curve_notex.tres" type="Curve" id=1]
 
 [resource]
-curve = SubResource( 1 )
+curve = ExtResource( 1 )
