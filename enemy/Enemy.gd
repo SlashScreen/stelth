@@ -50,6 +50,7 @@ func _process(delta):
 	#Talk to other gaurds, just casually?
 	#Implemennt noise stimulus.
 	#Attack, both tackle and tazer 
+	#Make interact with items: if item is misplaced, alert level, return to position
 	
 	#behavior that doesn't involve player detection
 	
