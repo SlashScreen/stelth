@@ -97,14 +97,15 @@ func _process(delta):
 	if canSeePlayer():
 		var ppos = player.get_position()
 		var distance = get_position().distance_to(ppos)
-		#print(str(distance/sightDistance) + " " + state + " " + str(alert))
+		var distprop = distance/sightDistance
+		#print(str(distprop) + " " + state + " " + str(alert))
 		match state:
 			"IDLE":
 				#This changes behavior based on how far away the player is from the guard.
 				#If they are greater than 2/3 of the sight distance away from the guard, enter the "HUH" state, UNLESS they are already wary.
 				#Between 1/3 and 2/3 enters CURIOUS mode.
 				#If < 1/3, the guard immediatley "finds" the player.
-				if distance/sightDistance > (2.0/3.0):
+				if distprop > (2.0/3.0):
 					if alert == 0:
 						state = "HUH"
 						angle = rad2deg(get_position().angle_to_point(ppos)) #Whete the guard "Thought I saw something"
@@ -112,24 +113,30 @@ func _process(delta):
 					else:
 						state = "CURIOUS"
 						searchTimer = 0
-				elif distance/sightDistance <= (2.0/3.0) and distance/sightDistance >= (1.0/3.0):
+				elif distprop <= (2.0/3.0) and distance/sightDistance >= (1.0/3.0):
 					state = "CURIOUS"
 					searchTimer = 0
-				elif distance/sightDistance < (1.0/3.0):
+				elif distprop < (1.0/3.0):
 					state = "FOUND"
+					print("immediate find")
 			"HUH":
 				#HUH means the guard is looking at where they Think they saw the player
 				#This is basically identical to the IDLE block, except that there is no "huh?" mode, for obvious reasons
 				
-				if distance/sightDistance <= (2.0/3.0) and distance/sightDistance >= (1.0/3.0):
+				if distprop <= (2.0/3.0) and distance/sightDistance >= (1.0/3.0):
 					state = "CURIOUS"
 					searchTimer = 0
-				elif distance/sightDistance < (1.0/3.0):
+				elif distprop < (1.0/3.0):
 					state = "FOUND"
+					print("immediate find-huh")
 			"CURIOUS":
 				#If sees player, move toward player and count up timer
 				#If timer at max, then the guard has found the player.
 				#Alert level affects time window player has to avoid detection- higher alert level means guards are more wary
+				if distprop < (1.0/3.0):
+					state = "FOUND"
+					print("immediate find-huh")
+					
 				if searchTimer <= CURIOUS_TIMER_MAX - alert:
 					searchTimer += delta
 				else:
@@ -138,8 +145,8 @@ func _process(delta):
 			"FOUND":
 				#If sees player and found, reset timer used for losing the player
 				#And also track player
-				
 				for g in compatriots:
+					print("alerting another guard")
 					g.alert(ppos)
 				seenTimer = SEARCHING_TIMER
 				target = ppos
@@ -192,6 +199,7 @@ func _process(delta):
 
 func alert(pos):
 	#alerts all guards to position
+	print("alerted by another guard")
 	state = "FOUND"
 	seenTimer = SEARCHING_TIMER
 	target = pos
