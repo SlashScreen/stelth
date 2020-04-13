@@ -24,6 +24,7 @@ position = Vector2( 65.7266, 76.681 )
 
 [node name="Enemy" parent="." instance=ExtResource( 4 )]
 position = Vector2( 575.148, 390.624 )
+personality = "NORMAL"
 
 [node name="item" parent="." instance=ExtResource( 2 )]
 position = Vector2( 286.354, 484.276 )

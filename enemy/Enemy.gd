@@ -10,6 +10,9 @@ export var last_seen = Vector2()
 export var FOV = 90 #FOV of vision cone. Degrees.
 export var alert = 0 #ALERT LEVEL: How wary guards are. Alert affects: whether guards will enter the "huh?" state, how long the player has before they are spotted.
 export var flashlightSwingCurve: Curve #Flashlight motion curve
+export var personality: String #Personality type: determines innate wariness of each guard, as well as
+#the sprite, dialog, and animations used. the 3 types are "NORMAL", "LAZY", and "SCARDEYCAT".
+
 #Constans
 const CURIOUS_TIMER_MAX = 7
 const SEARCHING_TIMER = 15
@@ -17,8 +20,9 @@ const HUH_MAX = 5
 const SNAP_DIST = 10
 const SPEED = 40
 #Internal variables
+var compatriots = [] #list of all fellow guards, looped for communication
 var sightDistance = 1000
-var angle = 0 #direction the guard is looking in. Degrees.
+var angle #direction the guard is looking in. Degrees.
 var seenTimer = 0
 var searchTimer = SEARCHING_TIMER
 var huhTimer = 0
@@ -27,6 +31,21 @@ var flashlightInterp = 0
 var flashlightSpeed = .25
 var flashlightAmplitude = 2
 var path #path to follow.
+
+func _ready():
+	#Set default alert level based on personality type
+	match personality:
+		"LAZY":
+			alert = -1
+		"NORMAL":
+			alert = 0
+		"SCAREDYCAT":
+			alert = 1
+	#Find fellow guards, add all except self to list
+	for node in get_tree().get_root().get_node("level").get_children(): #Get all nodes
+		if node.get_filename() == "res://enemy/Enemy.tscn" and node != self:
+			compatriots.append(node)
+	#TODO: load sprites and stuff
 
 func _process(delta):
 	$Cast.set_cast_to(to_local(player.get_position()))
@@ -78,7 +97,7 @@ func _process(delta):
 	if canSeePlayer():
 		var ppos = player.get_position()
 		var distance = get_position().distance_to(ppos)
-		print(str(distance/sightDistance) + " " + state + " " + str(alert))
+		#print(str(distance/sightDistance) + " " + state + " " + str(alert))
 		match state:
 			"IDLE":
 				#This changes behavior based on how far away the player is from the guard.
@@ -120,7 +139,8 @@ func _process(delta):
 				#If sees player and found, reset timer used for losing the player
 				#And also track player
 				
-				#TODO: Communicate with other guards
+				for g in compatriots:
+					g.alert(ppos)
 				seenTimer = SEARCHING_TIMER
 				target = ppos
 	else: #If does not see player
@@ -130,9 +150,9 @@ func _process(delta):
 				#If timer was at 0, then return back to idle
 				
 				#TODO: Set alert level based on how close the player was to discovery?
-				if is_at_target() and searchTimer > 0:
-					searchTimer -= delta
-					print(searchTimer)
+				if searchTimer > 0:
+					if is_at_target(): 
+						searchTimer -= delta
 				else:
 					state = "IDLE"
 			"FOUND":
@@ -169,6 +189,12 @@ func _process(delta):
 	$Flashlight.swing_to_direction(deg2rad(angle))#set_rotation(deg2rad(angle))
 	#impulse rigidbody.
 	apply_central_impulse(go*SPEED)
+
+func alert(pos):
+	#alerts all guards to position
+	state = "FOUND"
+	seenTimer = SEARCHING_TIMER
+	target = pos
 
 func canSeePlayer():
 	#Determines whether or not the enemy can see the player.
