@@ -8,9 +8,14 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Path2D",
+"class": "Patrol_Path",
+"language": "GDScript",
+"path": "res://Guardpath/Guardpath.gd"
+} ]
 _global_script_class_icons={
-
+"Patrol_Path": ""
 }
 
 [application]

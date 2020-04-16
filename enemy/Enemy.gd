@@ -10,6 +10,7 @@ export var last_seen = Vector2()
 export var FOV = 90 #FOV of vision cone. Degrees.
 export var alert = 0 #ALERT LEVEL: How wary guards are. Alert affects: whether guards will enter the "huh?" state, how long the player has before they are spotted.
 export var flashlightSwingCurve: Curve #Flashlight motion curve
+export var patrolPathRef: String
 export var personality: String #Personality type: determines innate wariness of each guard, as well as
 #the sprite, dialog, and animations used. the 3 types are "NORMAL", "LAZY", and "SCARDEYCAT".
 
@@ -23,6 +24,7 @@ const PATROL_SPEED = 20
 #Internal variables
 var compatriots = [] #list of all fellow guards, looped for communication
 var sightDistance = 1000
+var patrolPath
 var angle #direction the guard is looking in. Degrees.
 var seenTimer = 0
 var searchTimer = SEARCHING_TIMER
@@ -47,13 +49,11 @@ func _ready():
 	for node in get_tree().get_root().get_node("level").get_children(): #Get all nodes
 		if node.get_filename() == "res://enemy/Enemy.tscn" and node != self:
 			compatriots.append(node)
-	#Unstick Patrol path
-	$Patrol.set_as_toplevel(true)
-	$Patrol/PathFollow2D.set_as_toplevel(true)
+	#Load node
+	patrolPath = get_tree().get_root().get_node("level").get_node(patrolPathRef)
 	#TODO: load sprites and stuff
 
 func _process(delta):
-	
 	#BEHAVIOR SWITCH
 	
 	#BEHAVIOR BREAKDOWN:
@@ -83,8 +83,8 @@ func _process(delta):
 			if is_at_target():
 				progress += delta*PATROL_SPEED 
 				#Possible memory overflow here, given enough time.
-			$Patrol/PathFollow2D.set_offset(progress)
-			target = to_global($Patrol/PathFollow2D.get_position())
+			patrolPath.move_head_to(progress)
+			target = to_global(patrolPath.get_pos())
 			angle = rad2deg(Vector2().angle_to_point(go))
 		"CURIOUS","FOUND":
 			#If it is at the target, swing flashlight around in search of the player

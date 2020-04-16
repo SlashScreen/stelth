@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Guardpath/Guardpath.gd" type="Script" id=1]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 475.87, 395.339, 0, 0, 0, 0, 470.234, 519.349, 0, 0, 0, 0, 738.922, 502.438, 0, 0, 0, 0, 795.29, 397.218, 0, 0, 0, 0, 475.87, 395.339 )
+}
+
+[node name="Guardpath" type="Path2D"]
+curve = SubResource( 1 )
+script = ExtResource( 1 )
+
+[node name="Head" type="PathFollow2D" parent="."]

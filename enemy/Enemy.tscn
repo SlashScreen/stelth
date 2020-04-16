@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://enemy/Enemy.gd" type="Script" id=1]
 [ext_resource path="res://assets/Guard_Flashlight_v1.png" type="Texture" id=2]
@@ -9,11 +9,6 @@
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 31.3307
-
-[sub_resource type="Curve2D" id=3]
-_data = {
-"points": PoolVector2Array( 0, 0, 0, 0, -74.0191, -0.68045, 0, 0, 0, 0, -70.3317, 197.207, 0, 0, 0, 0, 164.43, 183.687, 0, 0, 0, 0, 136.16, 7.92337, 0, 0, 0, 0, -74.0191, -0.68045 )
-}
 
 [node name="Enemy" type="RigidBody2D"]
 collision_layer = 2
@@ -43,10 +38,3 @@ shadow_enabled = true
 script = ExtResource( 3 )
 
 [node name="Timer" type="Timer" parent="."]
-
-[node name="Patrol" type="Path2D" parent="."]
-curve = SubResource( 3 )
-
-[node name="PathFollow2D" type="PathFollow2D" parent="Patrol"]
-position = Vector2( -74.0191, -0.68045 )
-rotation = 1.55217
