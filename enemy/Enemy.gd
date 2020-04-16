@@ -19,6 +19,7 @@ const SEARCHING_TIMER = 15
 const HUH_MAX = 5
 const SNAP_DIST = 10
 const SPEED = 40
+const PATROL_SPEED = 20
 #Internal variables
 var compatriots = [] #list of all fellow guards, looped for communication
 var sightDistance = 1000
@@ -30,7 +31,8 @@ var go = Vector2() #direction to go in.
 var flashlightInterp = 0
 var flashlightSpeed = .25
 var flashlightAmplitude = 2
-var path #path to follow.
+var path #ASTAR path to follow.
+var progress = 0 #Progress along patrol path
 
 func _ready():
 	#Set default alert level based on personality type
@@ -45,10 +47,12 @@ func _ready():
 	for node in get_tree().get_root().get_node("level").get_children(): #Get all nodes
 		if node.get_filename() == "res://enemy/Enemy.tscn" and node != self:
 			compatriots.append(node)
+	#Unstick Patrol path
+	$Patrol.set_as_toplevel(true)
+	$Patrol/PathFollow2D.set_as_toplevel(true)
 	#TODO: load sprites and stuff
 
 func _process(delta):
-	$Cast.set_cast_to(to_local(player.get_position()))
 	
 	#BEHAVIOR SWITCH
 	
@@ -76,7 +80,11 @@ func _process(delta):
 	match state:
 		"IDLE":
 			#Point in the driection that the enemy is moving
-			#TODO: add patrol path
+			if is_at_target():
+				progress += delta*PATROL_SPEED 
+				#Possible memory overflow here, given enough time.
+			$Patrol/PathFollow2D.set_offset(progress)
+			target = to_global($Patrol/PathFollow2D.get_position())
 			angle = rad2deg(Vector2().angle_to_point(go))
 		"CURIOUS","FOUND":
 			#If it is at the target, swing flashlight around in search of the player
@@ -86,7 +94,6 @@ func _process(delta):
 			else:
 				angle = rad2deg(get_position().angle_to_point(target))
 		"HUH":
-			
 			swingFlashlight(delta)
 			if huhTimer <= HUH_MAX:
 				huhTimer += delta

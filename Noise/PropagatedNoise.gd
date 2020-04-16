@@ -6,7 +6,7 @@ export var volume = 0 #"volume" is how far away guards have to be to hear the so
 onready var nav = get_tree().get_root().get_node("level").get_node("Nav")
 
 #HOW DOES THIS WORK:
-#This is a very simple and semi-realistic-ish noise propogation script.
+#This is a very simple and semi-realistic-ish noise propagation script.
 #What that means, is that instead of a sound being a circle that any guard can hear,
 #It instead responds to the surroundings- being blocked by walls, mostly.
 

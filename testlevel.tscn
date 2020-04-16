@@ -22,10 +22,6 @@ tile_data = PoolIntArray( -131074, 1, 0, -131073, 1, 0, -196608, 1, 0, -196607, 
 [node name="player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 65.7266, 76.681 )
 
-[node name="Enemy" parent="." instance=ExtResource( 4 )]
-position = Vector2( 575.148, 390.624 )
-personality = "NORMAL"
-
 [node name="item" parent="." instance=ExtResource( 2 )]
 position = Vector2( 286.354, 484.276 )
 
@@ -33,5 +29,13 @@ position = Vector2( 286.354, 484.276 )
 position = Vector2( -144.388, 270.14 )
 scale = Vector2( 1.79321, 1.79321 )
 
+[node name="Enemy" parent="." instance=ExtResource( 4 )]
+position = Vector2( 575.148, 390.624 )
+personality = "NORMAL"
+
 [node name="Enemy2" parent="." instance=ExtResource( 4 )]
 position = Vector2( 460.818, 827.866 )
+
+[editable path="Enemy"]
+
+[editable path="Enemy2"]
