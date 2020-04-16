@@ -51,9 +51,11 @@ func _ready():
 			compatriots.append(node)
 	#Load node
 	patrolPath = get_tree().get_root().get_node("level").get_node(patrolPathRef)
+	target = patrolPath.get_pos()
 	#TODO: load sprites and stuff
 
 func _process(delta):
+	#print(patrolPathRef + " " + str(target) + " " + str(patrolPath.get_pos()))
 	#BEHAVIOR SWITCH
 	
 	#BEHAVIOR BREAKDOWN:
@@ -84,7 +86,7 @@ func _process(delta):
 				progress += delta*PATROL_SPEED 
 				#Possible memory overflow here, given enough time.
 			patrolPath.move_head_to(progress)
-			target = to_global(patrolPath.get_pos())
+			target = patrolPath.get_pos()
 			angle = rad2deg(Vector2().angle_to_point(go))
 		"CURIOUS","FOUND":
 			#If it is at the target, swing flashlight around in search of the player
