@@ -20,7 +20,7 @@ const SEARCHING_TIMER = 15
 const HUH_MAX = 5
 const SNAP_DIST = 10
 const SPEED = 40
-const PATROL_SPEED = 40
+const PATROL_SPEED = 20
 #Internal variables
 var compatriots = [] #list of all fellow guards, looped for communication
 var sightDistance = 1000
@@ -52,7 +52,8 @@ func _ready():
 			compatriots.append(node)
 	#Load node
 	patrolPath = get_tree().get_root().get_node("level").get_node(patrolPathRef)
-	target = patrolPath.get_pos()
+	patrolPath.register(name)
+	target = patrolPath.get_current_point(name)
 	#TODO: load sprites and stuff
 
 func _process(delta):
@@ -84,11 +85,10 @@ func _process(delta):
 		"IDLE":
 			#Point in the driection that the enemy is moving
 			if is_at_target():
-				progress += delta*PATROL_SPEED 
-				patrolPath.move_head_to(progress)
+				patrolPath.increment_point(name)
 				#Possible memory overflow here, given enough time.
 			#print(patrolPath.get_pos())
-			target = patrolPath.get_pos()
+			target = patrolPath.get_current_point(name)
 			angle = rad2deg(Vector2().angle_to_point(direction))
 		"CURIOUS","FOUND":
 			#If it is at the target, swing flashlight around in search of the player
@@ -208,7 +208,10 @@ func _process(delta):
 	#tell the flashlight to do its smoothing thing.
 	$Flashlight.swing_to_direction(deg2rad(angle))#set_rotation(deg2rad(angle))
 	#impulse rigidbody.
-	apply_central_impulse(go*SPEED)
+	if state == "IDLE":
+		apply_central_impulse(go*PATROL_SPEED)
+	else:
+		apply_central_impulse(go*SPEED)
 
 func alert(pos):
 	#alerts all guards to position
