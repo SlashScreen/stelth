@@ -20,7 +20,7 @@ const SEARCHING_TIMER = 15
 const HUH_MAX = 5
 const SNAP_DIST = 10
 const SPEED = 40
-const PATROL_SPEED = 20
+const PATROL_SPEED = 40
 #Internal variables
 var compatriots = [] #list of all fellow guards, looped for communication
 var sightDistance = 1000
@@ -30,6 +30,7 @@ var seenTimer = 0
 var searchTimer = SEARCHING_TIMER
 var huhTimer = 0
 var go = Vector2() #direction to go in.
+var direction = Vector2()
 var flashlightInterp = 0
 var flashlightSpeed = .25
 var flashlightAmplitude = 2
@@ -84,10 +85,11 @@ func _process(delta):
 			#Point in the driection that the enemy is moving
 			if is_at_target():
 				progress += delta*PATROL_SPEED 
+				patrolPath.move_head_to(progress)
 				#Possible memory overflow here, given enough time.
-			patrolPath.move_head_to(progress)
+			#print(patrolPath.get_pos())
 			target = patrolPath.get_pos()
-			angle = rad2deg(Vector2().angle_to_point(go))
+			angle = rad2deg(Vector2().angle_to_point(direction))
 		"CURIOUS","FOUND":
 			#If it is at the target, swing flashlight around in search of the player
 			#If not, point towards target
@@ -201,6 +203,8 @@ func _process(delta):
 	else:
 		go = Vector2()
 	
+	if go != Vector2(0,0):
+			direction = go.normalized()
 	#tell the flashlight to do its smoothing thing.
 	$Flashlight.swing_to_direction(deg2rad(angle))#set_rotation(deg2rad(angle))
 	#impulse rigidbody.

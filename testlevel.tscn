@@ -41,6 +41,7 @@ patrolPathRef = "Guardpath"
 personality = "NORMAL"
 
 [node name="Enemy2" parent="." instance=ExtResource( 4 )]
+visible = false
 position = Vector2( 460.818, 827.866 )
 patrolPathRef = "Guardpath2"
 personality = "SCARDEYCAT"
