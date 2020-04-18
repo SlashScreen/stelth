@@ -20,9 +20,8 @@ onready var nav = get_tree().get_root().get_node("level").get_node("Nav")
 #the coordinates of the sound's origin, and the volume variable to each guard,
 #who handles the data itself, determining whether that warrants investigation.
 
-#This is, I believe, a similar approach to how the game Thief: The Dark Project (1998) does its 
-#sound propogation. Maybe I'm wrong on that. Either way, it isn't a unique idea, and I heard it
-#first somewhere in a Gamemaker's Toolkit video. This is just my interperetation and implementation of the idea.
+#This is, I believe, a similar approach to how Splinter Cell and Hitman does it.
+#So, it's not my idea.
 
 #TODO: Change collision stuff based on crouching or standing.
 
