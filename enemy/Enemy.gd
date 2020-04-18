@@ -106,7 +106,7 @@ func _process(delta):
 				huhTimer = 0
 				state = "IDLE"
 	#behavior that *does* involve player detection
-	if canSeePlayer():
+	if canSeePlayer() and player.citizen == false:
 		var ppos = player.get_position()
 		var distance = get_position().distance_to(ppos)
 		var distprop = distance/sightDistance

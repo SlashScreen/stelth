@@ -8,7 +8,7 @@
 [sub_resource type="CubeMesh" id=1]
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 31.3307
+radius = 29.7638
 
 [node name="Enemy" type="RigidBody2D"]
 collision_layer = 2
@@ -35,7 +35,7 @@ collision_mask = 13
 texture = ExtResource( 2 )
 texture_scale = 10.0
 shadow_enabled = true
-shadow_item_cull_mask = 7
+shadow_item_cull_mask = 17
 script = ExtResource( 3 )
 swingCurve = ExtResource( 4 )
 

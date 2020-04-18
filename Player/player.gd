@@ -54,14 +54,14 @@ func _process(delta):
 				go.x = 1
 			#Sneak
 			#If sneak button is pressed, reduce speed and restrict visiom
-			if Input.is_action_just_pressed("sneak"):
+			if Input.is_action_just_pressed("sneak") and not citizen:
 				speed = SNEAKING_SPEED
 				crouching = true
 				#Restrict vision by zooming in cameraand doing the masking thing
 				$Sightline.show()
 				$Camera.zoom = Vector2(1,1)
 			#If it is released, return to normal speed and return visibility
-			if Input.is_action_just_released("sneak"):
+			if Input.is_action_just_released("sneak") and not citizen:
 				speed = WALKING_SPEED
 				crouching = false
 				#return visibility by removing the masking thing and zooming out the camera
@@ -71,7 +71,7 @@ func _process(delta):
 			#If the collect button is pushed and within a grab collider on an item class,
 			#pick up the item (done in the item script)
 			#TODO: Allow for multiple items by looping through all nodes and whatnot
-			if Input.is_action_just_pressed("collect") and get_parent().get_node("item").in_range(self):
+			if Input.is_action_just_pressed("collect") and get_parent().get_node("item").in_range(self) and not citizen:
 				if hold: #If holding, let it go
 					get_parent().get_node("item").let_go()
 					hold = false
@@ -103,7 +103,7 @@ func _process(delta):
 		#This creates a moment of tension where the player must sneak out of the level without
 		#half of the toolset.
 		
-		if Input.is_action_just_pressed("roll") and can_control and not hold:
+		if Input.is_action_just_pressed("roll") and can_control and not hold and not citizen:
 			#perhaps change roll impulse to be a constant force for ROLL-TIMER_MAX seconds?
 			apply_central_impulse(direction*ROLL_SPEED)
 			$Rollnoise.play_noise() #play noise
