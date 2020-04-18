@@ -12,7 +12,6 @@ radius = 31.3307
 
 [node name="Enemy" type="RigidBody2D"]
 collision_layer = 2
-collision_mask = 17
 mode = 2
 gravity_scale = 0.0
 linear_damp = 10.0
@@ -30,6 +29,7 @@ shape = SubResource( 2 )
 [node name="Cast" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 50, 0 )
+collision_mask = 13
 
 [node name="Flashlight" type="Light2D" parent="."]
 texture = ExtResource( 2 )
