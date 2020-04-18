@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "RigidBody2D",
+"class": "Guest",
+"language": "GDScript",
+"path": "res://Guest/Guest.gd"
+}, {
 "base": "Path2D",
 "class": "Patrol_Path",
 "language": "GDScript",
 "path": "res://Guardpath/Guardpath.gd"
 } ]
 _global_script_class_icons={
+"Guest": "",
 "Patrol_Path": ""
 }
 
