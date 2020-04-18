@@ -86,7 +86,7 @@ func _process(delta):
 			#Point in the driection that the enemy is moving
 			if is_at_target():
 				patrolPath.increment_point(name)
-				#Possible memory overflow here, given enough time.
+				
 			#print(patrolPath.get_pos())
 			target = patrolPath.get_current_point(name)
 			angle = rad2deg(Vector2().angle_to_point(direction))

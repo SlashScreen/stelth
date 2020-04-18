@@ -36,5 +36,6 @@ texture = ExtResource( 2 )
 texture_scale = 10.0
 shadow_enabled = true
 script = ExtResource( 3 )
+swingCurve = ExtResource( 4 )
 
 [node name="Timer" type="Timer" parent="."]
