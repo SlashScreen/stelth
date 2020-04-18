@@ -57,7 +57,11 @@ func _ready():
 	#TODO: load sprites and stuff
 
 func _process(delta):
-	#print(patrolPathRef + " " + str(target) + " " + str(patrolPath.get_pos()))
+	#ray switching
+	if player.crouching:
+		$Cast.set_collision_mask_bit(0,true)
+	else:
+		$Cast.set_collision_mask_bit(0,false)
 	#BEHAVIOR SWITCH
 	
 	#BEHAVIOR BREAKDOWN:
@@ -72,10 +76,7 @@ func _process(delta):
 	#any stimulus is applied. I do not plan to add more complex social behavior.
 	
 	#TODO:
-	#Alert other guards
-	#Patrol path.
 	#Talk to other gaurds, just casually?
-	#Implemennt noise stimulus.
 	#Attack, both tackle and tazer 
 	#Make interact with items: if item is misplaced, alert level, return to position
 	

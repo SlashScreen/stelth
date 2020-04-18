@@ -2,6 +2,7 @@ extends RigidBody2D
 #This is the player master script. Everything the player can do in both modes can be found here.
 
 #pulic variables.
+export var crouching = false
 export var citizen = false #This determines whether the player is 
 #walking around like a normal person during the recon scenes,
 #or in sneaky stealth mode.
@@ -55,12 +56,14 @@ func _process(delta):
 			#If sneak button is pressed, reduce speed and restrict visiom
 			if Input.is_action_just_pressed("sneak"):
 				speed = SNEAKING_SPEED
+				crouching = true
 				#Restrict vision by zooming in cameraand doing the masking thing
 				$Sightline.show()
 				$Camera.zoom = Vector2(1,1)
 			#If it is released, return to normal speed and return visibility
 			if Input.is_action_just_released("sneak"):
 				speed = WALKING_SPEED
+				crouching = false
 				#return visibility by removing the masking thing and zooming out the camera
 				$Sightline.hide()
 				$Camera.zoom = Vector2(2,2)
