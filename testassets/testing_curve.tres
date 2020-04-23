@@ -1,6 +1,7 @@
 [gd_resource type="CurveTexture" load_steps=2 format=2]
 
-[ext_resource path="res://test_curve_notex.tres" type="Curve" id=1]
+[ext_resource path="res://testassets/test_curve_notex.tres" type="Curve" id=1]
+
 
 [resource]
 curve = ExtResource( 1 )

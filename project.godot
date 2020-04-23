@@ -27,8 +27,8 @@ _global_script_class_icons={
 [application]
 
 config/name="Stelth"
-run/main_scene="res://testlevel.tscn"
-config/icon="res://icon.png"
+run/main_scene="res://testassets/testlevel.tscn"
+config/icon="res://testassets/icon.png"
 
 [input]
 
@@ -70,4 +70,4 @@ collect={
 
 [rendering]
 
-environment/default_environment="res://default_env.tres"
+environment/default_environment="res://testassets/default_env.tres"

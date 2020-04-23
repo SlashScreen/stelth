@@ -20,6 +20,7 @@ var speed = WALKING_SPEED
 var movable = true #is the character able to move at ALL - used to freeze for cutscenes or whatever
 var can_control = true #can the player control it - used to take away control during rolls
 var roll_timer = 0
+var items = []
 
 #PLAYER MOVESET:
 #Roll
@@ -30,6 +31,9 @@ var roll_timer = 0
 
 func _ready():
 	get_tree().get_root().get_node("level").connect("game_won",self,"_on_game_won")
+	for node in get_tree().get_root().get_node("level").get_children(): #Get all nodes
+		if node.get_filename() == "res://item/item.tscn": #If memeber of item class
+			items.append(node)
 
 func _process(delta):
 	#MOVEMENT
@@ -71,13 +75,15 @@ func _process(delta):
 			#If the collect button is pushed and within a grab collider on an item class,
 			#pick up the item (done in the item script)
 			#TODO: Allow for multiple items by looping through all nodes and whatnot
-			if Input.is_action_just_pressed("collect") and get_parent().get_node("item").in_range(self) and not citizen:
-				if hold: #If holding, let it go
-					get_parent().get_node("item").let_go()
-					hold = false
-				else: #If not holding, pick it up
-					get_parent().get_node("item").hold()
-					hold = true
+			if Input.is_action_just_pressed("collect") and not citizen:
+				for i in items:
+					if i.movable and i.in_range(self):
+						if hold: #If holding, let it go
+							get_parent().get_node("item").let_go()
+							hold = false
+						else: #If not holding, pick it up
+							get_parent().get_node("item").hold()
+							hold = true
 		else:
 			#count up time to return control to the player.
 			roll_timer += delta

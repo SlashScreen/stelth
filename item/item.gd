@@ -1,10 +1,12 @@
 extends Sprite
 
+export var movable = true
 var held = false
 
 func hold():
 	#makes it "held" by the player
-	held = true
+	if movable:
+		held = true
 
 func let_go():
 	#Drops the item.

@@ -16,7 +16,21 @@ var path
 var interestTimer = 0
 var pathProgress = 0
 
-#TODO: Dialogue?
+#OVERVIEW
+#Ah, yes. My hyper-intelligent, resource-efficient group AI system.
+#Like the ghosts in pac-man, or Boids, they only perform a small set of actions
+#in order to appear intelligent to the untrained eye. 
+#This set of actions is:
+#-every 10 + (random number from 1 to 10 seconds) they will choose a random
+#item object (a painting or statue in the context of the game), pathfind to it,
+#and stare at it for another random amount of time, then repeat the cycle.
+#And that's it, so far. I literally coded this today, so I'll see if there should
+#be something more added.
+
+#FUTURE PLANS:
+#Have some guests talk to eachother
+#maybe have dummy AI just walking to random points on the map that are offscreen
+#Think like a cartoon. What do extras in a cartoon do?
 
 func _ready():
 	#TODO: Init sprites
@@ -29,31 +43,26 @@ func _ready():
 		if node.get_filename() == "res://Guest/Guest.tscn": #If memeber of item class
 			otherGuests.append(node)
 	
-	resetTimer()
+	resetTimer() #set first timer
 
 func _process(delta):
-	if interestTimer > 0:
-		interestTimer -= delta
-	else:
-		resetTimer()
-		chosenItem = items[randi()%(len(items))]
-		target = chosenItem.get_position()
-		pathProgress = 0
+	if interestTimer > 0: #if timer still going
+		interestTimer -= delta #decrease
+	else: #if timer is through
+		resetTimer() #reset timer
+		chosenItem = items[randi()%(len(items))] #choose random item
+		target = chosenItem.get_position() #set target to the item's position.
 	
 	#TODO: Not update path every frame.
-	path = nav.get_simple_path(get_position(),target)
+	path = nav.get_simple_path(get_position(),target) #draw path
+	#The rest of the movement code is almost the exact same in Enemy.gd.
 	if get_position().distance_to(path[1]) > SNAP_DIST:
 		go = get_position().direction_to(path[1]).normalized()
 	else:
 		go = Vector2()
 	
 	apply_central_impulse(go*SPEED)
-#Pseudocode
-#Set timer to random timer
-#When timer goes down, choose item with least amount of guests
-#Then move to item.
-#Look at chosen item
-#reset timer
 
 func resetTimer():
+	#sets the timer. Void.
 	interestTimer = 10 + randi()%11+1
