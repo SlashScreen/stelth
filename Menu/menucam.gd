@@ -1,35 +1,33 @@
-extends Camera2D
+extends Node2D
 
-onready var fromPosition = get_offset()
-onready var targetPosition = get_offset()
-export var curve: Curve
-var moving = false
-var fromRotation = 0
-var targetRotation = 0
-var alpha = 0.0
-var posDifference
-var speed = 10
+export var swingCurve: Curve
+var next_angle = 0
+var start_angle = 0
+var next_pos : Vector2
+var start_pos : Vector2
 var iterator = 0
+var moving = false
 
-func go_to(topos, torot):
-	fromRotation = get_rotation()
-	fromPosition = Vector2(get_offset())
-	targetRotation = torot
-	targetPosition = topos
-	posDifference = topos.distance_to(get_offset())
-	moving = true
+func go_to(pos,angle): #Angle in Degrees
+	set_position(pos)
+	set_rotation(angle)
+	#next_angle = angle #set target angle
+	#next_pos = pos
+#	moving = true
 
-func _process(delta):
-	if moving:
-		alpha = float(get_offset().distance_to(targetPosition))/float(fromPosition.distance_to(targetPosition))
-		print("-")
-		print(get_offset().distance_to(targetPosition))
-		print(fromPosition.distance_to(targetPosition))
-		print(get_offset())
-		print(fromPosition)
-		print(targetPosition)
-		print(alpha)
-		if alpha >= 1.0:
-			moving = false
-			pass
-		set_offset(get_offset()+(get_offset().direction_to(targetPosition).normalized() * curve.interpolate(alpha) * speed))
+#func _process(delta):
+	#TODO: separate rotation and movement
+	#if moving:
+		#iterator+=1
+		#var difference = next_angle-start_angle
+		#var progress
+		#if difference == 0:
+		#	start_angle = next_angle
+		#	start_pos = next_pos
+		#	progress = 1
+		#	moving = false
+		#else:
+		#	progress = iterator / difference
+		
+		#set_offset(start_pos+(start_pos.direction_to(next_pos).normalized()*swingCurve.interpolate(progress)))
+		#set_rotation(start_angle-(difference*swingCurve.interpolate(progress)))
