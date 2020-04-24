@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Menu/Buttons/Start.gd" type="Script" id=1]
+[ext_resource path="res://Menu/menucam.gd" type="Script" id=2]
+[ext_resource path="res://Menu/Options.gd" type="Script" id=3]
+[ext_resource path="res://testassets/test_curve_notex.tres" type="Curve" id=4]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -9,11 +12,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Container" type="Control" parent="."]
+[node name="menucam" type="Camera2D" parent="."]
+rotation = 0.541052
+rotating = true
+current = true
+script = ExtResource( 2 )
+curve = ExtResource( 4 )
+
+[node name="Startmenu" type="Control" parent="."]
 margin_right = 670.0
 margin_bottom = 445.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Start" type="Button" parent="Container"]
+[node name="Start" type="Button" parent="Startmenu"]
 margin_right = 220.0
 margin_bottom = 64.0
 text = "Play"
@@ -22,8 +35,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Camera2D" type="Camera2D" parent="."]
-rotation = 0.541052
-rotating = true
-current = true
-[connection signal="pressed" from="Container/Start" to="Container/Start" method="_on_Start_pressed"]
+[node name="Options" type="Button" parent="Startmenu"]
+margin_left = -1.33765
+margin_top = 68.8898
+margin_right = 219.662
+margin_bottom = 132.89
+text = "Options"
+script = ExtResource( 3 )
+
+[node name="Options" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+[connection signal="pressed" from="Startmenu/Start" to="Startmenu/Start" method="_on_Start_pressed"]
+[connection signal="pressed" from="Startmenu/Options" to="Startmenu/Options" method="_on_Options_pressed"]
