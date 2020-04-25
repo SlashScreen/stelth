@@ -47,7 +47,17 @@ text = "Options"
 script = ExtResource( 3 )
 
 [node name="Options" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 1196.75
+margin_top = 467.757
+margin_right = 1236.75
+margin_bottom = 507.757
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="Options"]
+margin_right = 12.0
+margin_bottom = 20.0
+text = "This is the options"
 [connection signal="pressed" from="Startmenu/Start" to="Startmenu/Start" method="_on_Start_pressed"]
 [connection signal="pressed" from="Startmenu/Options" to="Startmenu/Options" method="_on_Options_pressed"]

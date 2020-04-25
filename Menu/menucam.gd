@@ -7,11 +7,14 @@ var next_pos : Vector2
 var start_pos : Vector2
 var iterator = 0
 var difference
-var speed = 4
+var speed = 2
 var progress = 0
 var moving = false
+var rotmargin = 450
 
 func go_to(pos,angle): #Angle in Degrees
+	start_pos = get_position()
+	next_pos = pos
 	set_position(pos) #The camera will follow this
 	start_angle = get_rotation()
 	next_angle = angle #set target angle
@@ -20,10 +23,13 @@ func go_to(pos,angle): #Angle in Degrees
 	moving = true
 
 func _process(delta):
-	#TODO: Rotation is linear, needs to be smooth
+	#TODO: Perhaps stop during transit, and when the camera slows down, then rotate.
 	if moving:
 		#Increase "iterator" - Iterator is in physical units
-		iterator+=delta*speed
+		var campos = $menucam.get_camera_screen_center()
+		print(campos.distance_to(next_pos))
+		if campos.distance_to(start_pos) < rotmargin or campos.distance_to(next_pos) < rotmargin:
+			iterator+=delta*speed
 		#Catch divide by zero error
 		if difference == 0:
 			moving = false
