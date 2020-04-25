@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Menu/Buttons/Start.gd" type="Script" id=1]
 [ext_resource path="res://Menu/menucam.gd" type="Script" id=2]
 [ext_resource path="res://Menu/Options.gd" type="Script" id=3]
+[ext_resource path="res://testassets/test_curve_notex.tres" type="Curve" id=4]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -12,7 +13,9 @@ __meta__ = {
 }
 
 [node name="Camnode" type="Node2D" parent="."]
+rotation = -0.6353
 script = ExtResource( 2 )
+swingCurve = ExtResource( 4 )
 
 [node name="menucam" type="Camera2D" parent="Camnode"]
 rotating = true
