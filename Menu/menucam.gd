@@ -14,7 +14,7 @@ var rotmargin = 500
 
 func _ready():
 	yield(get_tree().create_timer(1.0), "timeout") #Wait to pan down
-	go_to(get_parent().get_node("Startmenu").get_position(),0) #Pan down
+	go_to(get_parent().get_node("Startmenu").get_position(),15) #Pan down
 
 func go_to(pos,angle): #Angle in Degrees
 	start_pos = get_position()
@@ -31,7 +31,7 @@ func _process(delta):
 	if moving:
 		#Increase "iterator" - Iterator is in physical units
 		var campos = $menucam.get_camera_screen_center()
-		print(campos.distance_to(next_pos))
+		#print(campos.distance_to(next_pos))
 		if campos.distance_to(start_pos) < rotmargin or campos.distance_to(next_pos) < rotmargin:
 			iterator+=delta*speed
 		#Catch divide by zero error
@@ -43,10 +43,10 @@ func _process(delta):
 		#If it's finished, stop
 		if progress >= 1:
 			moving = false
-			set_rotation(next_angle) #Ensure that it all lines up in the end
+			set_rotation(deg2rad(next_angle)) #Ensure that it all lines up in the end
 			return
 		else: #else
 			#Set rotation to the complex equation
 			#Starting point + interpolated angle from start_angle to next_angle
 			#by alpha "progress" by curve rotCurve 
-			set_rotation(start_angle + ((difference * (progress)*rotCurve.interpolate(progress)) ) )
+			set_rotation(deg2rad(start_angle + ((difference * (progress)*rotCurve.interpolate(progress)) ) ) )
