@@ -13,7 +13,7 @@ __meta__ = {
 }
 
 [node name="Camnode" type="Node2D" parent="."]
-rotation = -0.6353
+position = Vector2( 0, -500 )
 script = ExtResource( 2 )
 rotCurve = ExtResource( 4 )
 

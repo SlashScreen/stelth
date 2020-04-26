@@ -7,10 +7,14 @@ var next_pos : Vector2
 var start_pos : Vector2
 var iterator = 0
 var difference
-var speed = 2
+var speed = 1
 var progress = 0
 var moving = false
-var rotmargin = 450
+var rotmargin = 500
+
+func _ready():
+	yield(get_tree().create_timer(1.0), "timeout") #Wait to pan down
+	go_to(get_parent().get_node("Startmenu").get_position(),0) #Pan down
 
 func go_to(pos,angle): #Angle in Degrees
 	start_pos = get_position()
