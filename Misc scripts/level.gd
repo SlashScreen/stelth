@@ -3,6 +3,8 @@ extends Node2D
 var won = false
 export var id = 0
 export var timeToTake = 60
+export var reconLevel = false
+export var closingTime = 10
 signal game_won
 
 func win_game():
