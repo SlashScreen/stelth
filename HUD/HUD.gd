@@ -15,7 +15,7 @@ func _process(delta):
 			timer += delta
 			get_node("Timer").set_text(str(round(timer)))
 			if timer >= timeToClose:
-				won = true
+				get_tree().get_root().get_node("level").win_game()
 	else:
 		#This is the level timer at the top of the screen.
 		#This will effect your Rating at the end of each level.
