@@ -5,6 +5,7 @@ export var id = 0
 export var timeToTake = 60
 export var reconLevel = false
 export var closingTime = 10
+export var nextScene : String
 signal game_won
 
 func win_game(): #NTS; win_game called from Entrance node

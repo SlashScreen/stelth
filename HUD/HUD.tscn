@@ -36,3 +36,15 @@ text = "Mission complete!"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="continuebutton" type="Button" parent="."]
+visible = false
+margin_left = 22.0
+margin_top = 115.0
+margin_right = 113.0
+margin_bottom = 158.0
+text = "continue/back to menu"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="continuebutton" to="." method="_on_continue_pressed"]

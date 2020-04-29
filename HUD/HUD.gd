@@ -3,6 +3,7 @@ extends CanvasLayer
 onready var timer = 0
 onready var recon = get_tree().get_root().get_node("level").reconLevel
 onready var timeToClose = get_tree().get_root().get_node("level").closingTime
+onready var nextScene = get_tree().get_root().get_node("level").nextScene
 var won = false
 
 func _ready():
@@ -27,7 +28,17 @@ func _on_game_won():
 	#When the game is won, show the victory screens
 	won = true
 	$Darkscreen.show()
+	$continuebutton.show()
 	if recon:
 		pass
 	else:
 		$Wintext.show() #"win" being the actual word, not "window"
+
+func _on_continue_pressed():
+	var manager = get_node("/root/sceneManager")
+	
+	if recon:
+		manager.change_scene(nextScene)
+	else:
+		manager.change_scene("res://Menu/menu.tscn")
+		

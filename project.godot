@@ -30,6 +30,10 @@ config/name="Stelth"
 run/main_scene="res://testassets/testlevel.tscn"
 config/icon="res://testassets/icon.png"
 
+[autoload]
+
+sceneManager="*res://Singletons/sceneManager.gd"
+
 [input]
 
 up={

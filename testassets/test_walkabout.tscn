@@ -9,6 +9,7 @@
 [node name="level" type="Node2D"]
 script = ExtResource( 1 )
 reconLevel = true
+nextScene = "res://testassets/testlevel.tscn"
 
 [node name="Nav" type="Navigation2D" parent="."]
 
