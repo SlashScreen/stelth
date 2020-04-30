@@ -32,11 +32,16 @@ func _on_game_won():
 	if recon:
 		pass
 	else:
+		#TODO: multiply string by value how?
+		var string = ""
+		for i in range(get_tree().get_root().get_node("level").calc_score(timer)):
+			string += "*"
+		$Rating.set_text(string)
 		$Wintext.show() #"win" being the actual word, not "window"
 
 func _on_continue_pressed():
 	var manager = get_node("/root/sceneManager")
-	
+	$Rating.set_text("")
 	if recon:
 		manager.change_scene(nextScene)
 	else:

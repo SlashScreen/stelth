@@ -158,6 +158,7 @@ func _process(delta):
 				#If sees player and found, reset timer used for losing the player
 				#And also track player
 				for g in compatriots:
+					get_tree().get_root().get_node("level").playerWasSeen = true
 					print("alerting another guard")
 					g.alert(ppos)
 				seenTimer = SEARCHING_TIMER

@@ -47,4 +47,14 @@ text = "continue/back to menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Rating" type="Label" parent="."]
+margin_left = 424.611
+margin_top = 239.806
+margin_right = 464.611
+margin_bottom = 261.806
+rect_scale = Vector2( 5, 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="continuebutton" to="." method="_on_continue_pressed"]
