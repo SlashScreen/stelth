@@ -10,8 +10,8 @@ export var citizen = false #This determines whether the player is
 #Constants.
 const WALKING_SPEED = 75
 const SNEAKING_SPEED = 25
-const ROLL_SPEED = 1500
-const ROLL_TIMER_MAX = .8
+const ROLL_SPEED = 3000
+const ROLL_TIMER_MAX = .5
 #Internal variables.
 var go = Vector2() #which way to jolt the rigidbody.
 var hold = false #If holding an item. You cannot roll while holding an item.
@@ -30,6 +30,7 @@ var items = []
 #Sneak to avoid detection, at the cost of lower visibility
 
 func _ready():
+# warning-ignore:return_value_discarded
 	get_tree().get_root().get_node("level").connect("game_won",self,"_on_game_won")
 	for node in get_tree().get_root().get_node("level").get_children(): #Get all nodes
 		if node.get_filename() == "res://item/item.tscn": #If memeber of item class
