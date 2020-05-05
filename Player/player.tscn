@@ -5,7 +5,6 @@
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Noise/Noise.tscn" type="PackedScene" id=4]
 
-
 [sub_resource type="CubeMesh" id=1]
 
 [sub_resource type="CapsuleShape2D" id=2]
@@ -42,4 +41,3 @@ smoothing_enabled = true
 [node name="HUD" parent="Camera" instance=ExtResource( 3 )]
 
 [node name="Rollnoise" parent="." instance=ExtResource( 4 )]
-volume = 500

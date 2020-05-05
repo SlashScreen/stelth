@@ -6,12 +6,15 @@ export var crouching = false
 export var citizen = false #This determines whether the player is 
 #walking around like a normal person during the recon scenes,
 #or in sneaky stealth mode.
-#This is unimplemented yet.
+
 #Constants.
 const WALKING_SPEED = 75
 const SNEAKING_SPEED = 25
-const ROLL_SPEED = 3000
-const ROLL_TIMER_MAX = .5
+const ROLL_SPEED = 100
+const ROLL_DURATION = .3 #Time for the actual roll
+const ROLL_TIMER_MAX = .7 #time between roll button pressed and control to player
+#Note: Time that player is sitting after roll is ROLL_TIMER_MAX - ROLL_DURATION
+
 #Internal variables.
 var go = Vector2() #which way to jolt the rigidbody.
 var hold = false #If holding an item. You cannot roll while holding an item.
@@ -21,6 +24,8 @@ var movable = true #is the character able to move at ALL - used to freeze for cu
 var can_control = true #can the player control it - used to take away control during rolls
 var roll_timer = 0
 var items = []
+var rolling = false
+var rollingInterpolator = 0
 
 #PLAYER MOVESET:
 #Roll
@@ -91,6 +96,7 @@ func _process(delta):
 			if roll_timer >= ROLL_TIMER_MAX:
 				roll_timer = 0
 				can_control = true
+				rolling = false
 		#Rolling and movement impulse
 		
 		#Rolling is a short speed boost in the last direction of movement
@@ -110,12 +116,17 @@ func _process(delta):
 		#This creates a moment of tension where the player must sneak out of the level without
 		#half of the toolset.
 		
+		#Set state to rolling
 		if Input.is_action_just_pressed("roll") and can_control and not hold and not citizen:
-			#perhaps change roll impulse to be a constant force for ROLL-TIMER_MAX seconds?
-			apply_central_impulse(direction*ROLL_SPEED)
 			$Rollnoise.play_noise() #play noise
 			can_control = false #relinquish control (timer stars automatically)
-			#Todo: set timer max here, so allow for other moments of no control
+			rolling = true
+			rollingInterpolator = 0
+		
+		if rolling: #if rolling, apply foce based on curve
+			var rollCurve : Curve = load("res://Player/roll_curve.tres")
+			rollingInterpolator += delta/ROLL_DURATION
+			apply_central_impulse(direction*ROLL_SPEED*rollCurve.interpolate(rollingInterpolator))
 		else:
 			#Do normal behavior.
 			apply_central_impulse(go.normalized()*speed)
