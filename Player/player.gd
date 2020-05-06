@@ -10,9 +10,9 @@ export var citizen = false #This determines whether the player is
 #Constants.
 const WALKING_SPEED = 75
 const SNEAKING_SPEED = 25
-const ROLL_SPEED = 100
+const ROLL_SPEED = 150
 const ROLL_DURATION = .3 #Time for the actual roll
-const ROLL_TIMER_MAX = .7 #time between roll button pressed and control to player
+const ROLL_TIMER_MAX = .3 #time between roll button pressed and control to player
 #Note: Time that player is sitting after roll is ROLL_TIMER_MAX - ROLL_DURATION
 
 #Internal variables.
@@ -117,7 +117,7 @@ func _process(delta):
 		#half of the toolset.
 		
 		#Set state to rolling
-		if Input.is_action_just_pressed("roll") and can_control and not hold and not citizen:
+		if Input.is_action_just_pressed("roll") and can_control and not hold and not citizen and crouching:
 			$Rollnoise.play_noise() #play noise
 			can_control = false #relinquish control (timer stars automatically)
 			rolling = true
