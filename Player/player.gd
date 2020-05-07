@@ -11,6 +11,7 @@ export var citizen = false #This determines whether the player is
 const WALKING_SPEED = 75
 const SNEAKING_SPEED = 25
 const ROLL_SPEED = 150
+const ROLL_COOLDOWN = 2
 const ROLL_DURATION = .3 #Time for the actual roll
 const ROLL_TIMER_MAX = .3 #time between roll button pressed and control to player
 #Note: Time that player is sitting after roll is ROLL_TIMER_MAX - ROLL_DURATION
@@ -26,6 +27,8 @@ var roll_timer = 0
 var items = []
 var rolling = false
 var rollingInterpolator = 0
+var rollCooldownTimer = 0
+var canRoll = true
 
 #PLAYER MOVESET:
 #Roll
@@ -96,19 +99,22 @@ func _process(delta):
 			if roll_timer >= ROLL_TIMER_MAX:
 				roll_timer = 0
 				can_control = true
+				#start roll cooldown timer
+				canRoll = false
+				rollCooldownTimer = 0
 				rolling = false
+		
+		#reset roll cooldown timer
+		if not canRoll and rollCooldownTimer < ROLL_COOLDOWN:
+			rollCooldownTimer += delta
+		elif rollCooldownTimer >= ROLL_COOLDOWN:
+			canRoll = true
 		#Rolling and movement impulse
 		
-		#Rolling is a short speed boost in the last direction of movement
-		#at the cost of the loss of player input for a brief amount of time, and it makes a
-		#quiet noise, that alerts gaurds. I might remove that for balance, though.
-		#This is a deliberate decision to allow the player to be able to quickly
-		#move between obstacles to, say, avoid a guard who is about to turn around,
-		#but avoid player abuse by using it like the roll in ocarina of time to flee guards.
 		
 		#This section goes like this:
 		#Normally, the player's rigidbody is applied an impulse in the direction defined by the variable "go".
-		#However, if the "roll" button is pressed, it provides the short speed boost 
+		#However, if the "roll" button is pressed, it provides a period of uncontrollable speed controlled by roll_curve 
 		#described above, plays the noise, and relinquishes control.
 		#The roll's impulse is in the direction of variable "direction", which is the
 		#player's last direction of movement.
@@ -117,7 +123,14 @@ func _process(delta):
 		#half of the toolset.
 		
 		#Set state to rolling
-		if Input.is_action_just_pressed("roll") and can_control and not hold and not citizen and crouching:
+		#If:
+		#Input roll pressed
+		#Player can control
+		#Player not holding anything
+		#Player isn't in recon mode ("citizen")
+		#Player is crouching
+		#Player is able to roll
+		if Input.is_action_just_pressed("roll") and can_control and not hold and not citizen and crouching and canRoll:
 			$Rollnoise.play_noise() #play noise
 			can_control = false #relinquish control (timer stars automatically)
 			rolling = true
