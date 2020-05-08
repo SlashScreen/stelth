@@ -13,8 +13,6 @@ const SNEAKING_SPEED = 25
 const ROLL_SPEED = 150
 const ROLL_COOLDOWN = 2
 const ROLL_DURATION = .3 #Time for the actual roll
-const ROLL_TIMER_MAX = .3 #time between roll button pressed and control to player
-#Note: Time that player is sitting after roll is ROLL_TIMER_MAX - ROLL_DURATION
 
 #Internal variables.
 var go = Vector2() #which way to jolt the rigidbody.
@@ -96,7 +94,7 @@ func _process(delta):
 		else:
 			#count up time to return control to the player.
 			roll_timer += delta
-			if roll_timer >= ROLL_TIMER_MAX:
+			if roll_timer >= ROLL_DURATION:
 				roll_timer = 0
 				can_control = true
 				#start roll cooldown timer
