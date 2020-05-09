@@ -52,14 +52,19 @@ func _process(delta):
 		resetTimer() #reset timer
 		chosenItem = items[randi()%(len(items))] #choose random item
 		target = chosenItem.get_position() #set target to the item's position.
+		path = nav.get_simple_path(get_position(),target) #draw path
+		pathProgress = 0
 	
 	#TODO: Not update path every frame.
-	path = nav.get_simple_path(get_position(),target) #draw path
+	
 	#The rest of the movement code is almost the exact same in Enemy.gd.
-	if get_position().distance_to(path[1]) > SNAP_DIST:
-		go = get_position().direction_to(path[1]).normalized()
+	if get_position().distance_to(path[pathProgress]) > SNAP_DIST:
+		go = get_position().direction_to(path[pathProgress]).normalized()
 	else:
 		go = Vector2()
+		if pathProgress < path.size()-1:
+			#print(str(pathProgress) + " " + str(path.size()))
+			pathProgress += 1
 	
 	apply_central_impulse(go*SPEED)
 

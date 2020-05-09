@@ -106,7 +106,7 @@ func _process(delta):
 				huhTimer = 0
 				state = "IDLE"
 	#behavior that *does* involve player detection
-	if canSeePlayer() and player.citizen == false:
+	if canSeePlayer() and player.citizen == false and get_position().distance_to(player.get_position()) <= 1000:
 		var ppos = player.get_position()
 		var distance = get_position().distance_to(ppos)
 		var distprop = distance/sightDistance
@@ -163,7 +163,7 @@ func _process(delta):
 					g.alert(ppos)
 				seenTimer = SEARCHING_TIMER
 				target = ppos
-	else: #If does not see player
+	elif not canSeePlayer(): #If does not see player
 		match state:
 			"CURIOUS":
 				#If does not see player, count down the timer that was counting up before
