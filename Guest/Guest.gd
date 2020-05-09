@@ -55,15 +55,13 @@ func _process(delta):
 		path = nav.get_simple_path(get_position(),target) #draw path
 		pathProgress = 0
 	
-	#TODO: Not update path every frame.
-	
 	#The rest of the movement code is almost the exact same in Enemy.gd.
-	if get_position().distance_to(path[pathProgress]) > SNAP_DIST:
-		go = get_position().direction_to(path[pathProgress]).normalized()
+	if get_position().distance_to(path[pathProgress-1]) > SNAP_DIST:
+		go = get_position().direction_to(path[pathProgress-1]).normalized()
 	else:
 		go = Vector2()
-		if pathProgress < path.size()-1:
-			#print(str(pathProgress) + " " + str(path.size()))
+		if pathProgress <= path.size()-1:
+			print("increment path " + str(name) + " " + str(pathProgress) + " " + str(path.size()))
 			pathProgress += 1
 	
 	apply_central_impulse(go*SPEED)

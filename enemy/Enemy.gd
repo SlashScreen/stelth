@@ -36,6 +36,7 @@ var flashlightSpeed = .25
 var flashlightAmplitude = 2
 var path #ASTAR path to follow.
 var progress = 0 #Progress along patrol path
+var starPathProgress = 1 #progress along navigated path
 
 func _ready():
 	#Set default alert level based on personality type
@@ -196,7 +197,7 @@ func _process(delta):
 	#The rigidbody is then provided an impulse to move in "go" direction.
 	
 	#Calculate path to taget using the navigator node
-	path = get_parent().get_node("Nav").get_simple_path(get_position(),target)
+	genPath()
 	#if the enemy is close enough to the next point (Close enough defined by SNAP_DIST),
 	#don't bother moving.
 	#But if not, calculate go. 
@@ -204,6 +205,8 @@ func _process(delta):
 		go = get_position().direction_to(path[1]).normalized()
 	else:
 		go = Vector2()
+		if starPathProgress <= path.size()-1:
+			starPathProgress += 1
 	
 	if go != Vector2(0,0):
 			direction = go.normalized()
@@ -261,3 +264,7 @@ func swingFlashlight(delta):
 		flashlightInterp = 0
 	#increment angle based on curve interpolation
 	angle += flashlightSwingCurve.interpolate(flashlightInterp) * flashlightAmplitude
+
+func genPath():
+	starPathProgress = 1
+	path = get_parent().get_node("Nav").get_simple_path(get_position(),target)
