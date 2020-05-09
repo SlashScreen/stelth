@@ -205,8 +205,8 @@ func _process(delta):
 		go = get_position().direction_to(path[1]).normalized()
 	else:
 		go = Vector2()
-		if starPathProgress <= path.size()-1:
-			starPathProgress += 1
+		#if starPathProgress <= path.size()-1:
+			#starPathProgress += 1
 	
 	if go != Vector2(0,0):
 			direction = go.normalized()

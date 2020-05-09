@@ -3,10 +3,12 @@ extends RigidBody2D
 class_name Guest
 
 onready var target: Vector2 = get_position()
+onready var nextPoint: Vector2 = Vector2()
 onready var nav = get_tree().get_root().get_node("level").get_node("Nav")
 export var spriteAtlas: Image
 const SNAP_DIST = 10
 const SPEED = 40
+const INTEREST_OFFSET = 2
 var chosenItem
 var go = Vector2()
 var pointTowards = Vector2()
@@ -35,7 +37,8 @@ var pathProgress = 0
 func _ready():
 	#TODO: Init sprites
 	#init path
-	path = nav.get_simple_path(get_position(),target)
+	path = nav.get_simple_path(get_position(),target,false)
+	$debugline.set_as_toplevel(true)
 	#Find other nodes
 	for node in get_tree().get_root().get_node("level").get_children(): #Get all nodes
 		if node.get_filename() == "res://item/item.tscn": #If memeber of item class
@@ -52,20 +55,23 @@ func _process(delta):
 		resetTimer() #reset timer
 		chosenItem = items[randi()%(len(items))] #choose random item
 		target = chosenItem.get_position() #set target to the item's position.
-		path = nav.get_simple_path(get_position(),target) #draw path
+		path = nav.get_simple_path(get_position(),target, false) #draw path
 		pathProgress = 0
+		nextPoint = path[pathProgress]
+		$debugline.set_points(path)
 	
 	#The rest of the movement code is almost the exact same in Enemy.gd.
-	if get_position().distance_to(path[pathProgress-1]) > SNAP_DIST:
-		go = get_position().direction_to(path[pathProgress-1]).normalized()
+	if get_position().distance_to(nextPoint) > SNAP_DIST:
+		go = get_position().direction_to(nextPoint).normalized()
 	else:
 		go = Vector2()
-		if pathProgress <= path.size()-1:
+		if pathProgress+1 <= path.size():
 			print("increment path " + str(name) + " " + str(pathProgress) + " " + str(path.size()))
 			pathProgress += 1
+			nextPoint = path[pathProgress-1]
 	
 	apply_central_impulse(go*SPEED)
 
 func resetTimer():
 	#sets the timer. Void.
-	interestTimer = 10 + randi()%11+1
+	interestTimer = INTEREST_OFFSET + randi()%11+1
