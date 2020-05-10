@@ -64,11 +64,12 @@ func _process(delta):
 	if get_position().distance_to(nextPoint) > SNAP_DIST:
 		go = get_position().direction_to(nextPoint).normalized()
 	else:
-		go = Vector2()
 		if pathProgress+1 <= path.size():
 			print("increment path " + str(name) + " " + str(pathProgress) + " " + str(path.size()))
 			pathProgress += 1
 			nextPoint = path[pathProgress-1]
+		else:
+			go = Vector2()
 	
 	apply_central_impulse(go*SPEED)
 

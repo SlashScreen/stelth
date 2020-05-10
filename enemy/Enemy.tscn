@@ -42,5 +42,6 @@ swingCurve = ExtResource( 4 )
 [node name="Timer" type="Timer" parent="."]
 
 [node name="debugline" type="Line2D" parent="."]
+visible = false
 width = 5.0
 default_color = Color( 0.968627, 0.0196078, 1, 1 )

@@ -91,12 +91,11 @@ func _process(delta):
 	match state:
 		"IDLE":
 			#Point in the driection that the enemy is moving
-			if is_at_target():
+			if get_position().distance_to(target) < SNAP_DIST+20:
 				patrolPath.increment_point(name)
 				target = patrolPath.get_current_point(name)
-				print(name + " " + str(target))
+				#print(name + " " + str(target))
 				
-			#print(patrolPath.get_pos())
 			angle = rad2deg(Vector2().angle_to_point(direction))
 		"CURIOUS","FOUND":
 			#If it is at the target, swing flashlight around in search of the player
