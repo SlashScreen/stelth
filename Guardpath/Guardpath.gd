@@ -3,9 +3,12 @@ extends Path2D
 class_name Patrol_Path
 
 var patrolTracker = {}
-onready var pnts = get_curve().get_baked_points()
+var pnts 
 #patrolTracker goes:
 #Node Name : Current point
+func _ready():
+	get_curve().set_bake_interval(50)
+	pnts = get_curve().get_baked_points()
 
 func move_head_to(d):
 	$Head.set_offset(d)

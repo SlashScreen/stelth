@@ -19,7 +19,7 @@ export var personality: String #Personality type: determines innate wariness of 
 const CURIOUS_TIMER_MAX = 7
 const SEARCHING_TIMER = 15
 const HUH_MAX = 5
-const SNAP_DIST = 10
+const SNAP_DIST = 15
 const SPEED = 40
 const PATROL_SPEED = 20
 const TARGET_CHECK_TIMER_MAX = .1
@@ -93,9 +93,10 @@ func _process(delta):
 			#Point in the driection that the enemy is moving
 			if is_at_target():
 				patrolPath.increment_point(name)
+				target = patrolPath.get_current_point(name)
+				print(name + " " + str(target))
 				
 			#print(patrolPath.get_pos())
-			target = patrolPath.get_current_point(name)
 			angle = rad2deg(Vector2().angle_to_point(direction))
 		"CURIOUS","FOUND":
 			#If it is at the target, swing flashlight around in search of the player
@@ -111,6 +112,7 @@ func _process(delta):
 			else:
 				huhTimer = 0
 				state = "IDLE"
+				target = patrolPath.get_current_point(name)
 	#behavior that *does* involve player detection
 	if canSeePlayer() and player.citizen == false and get_position().distance_to(player.get_position()) <= 1000:
 		var ppos = player.get_position()
@@ -181,6 +183,7 @@ func _process(delta):
 						searchTimer -= delta
 				else:
 					state = "IDLE"
+					target = patrolPath.get_current_point(name)
 			"FOUND":
 				#If does not see player, count down timer
 				#If timer at 0, then revert to curious state, set alert level
@@ -279,6 +282,9 @@ func swingFlashlight(delta):
 
 func genPath():
 	starPathProgress = 0
-	path = get_parent().get_node("Nav").get_simple_path(get_position(),target, false)
+	if state == "IDLE":
+		path = get_parent().get_node("Nav").get_simple_path(get_position(),target)
+	else:
+		path = get_parent().get_node("Nav").get_simple_path(get_position(),target, false)
 	$debugline.set_points(path)
 	nextPoint = path[starPathProgress]
