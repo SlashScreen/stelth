@@ -91,7 +91,7 @@ func _process(delta):
 	match state:
 		"IDLE":
 			#Point in the driection that the enemy is moving
-			if get_position().distance_to(target) < SNAP_DIST+20:
+			if get_position().distance_to(target) < SNAP_DIST+20: #NOTE TO SELF: This is to reevent the janky stop-and go behavior.
 				patrolPath.increment_point(name)
 				target = patrolPath.get_current_point(name)
 				#print(name + " " + str(target))

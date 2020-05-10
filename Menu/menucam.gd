@@ -7,7 +7,7 @@ var next_pos : Vector2
 var start_pos : Vector2
 var iterator = 0
 var difference
-var speed = 1
+var speed = 5
 var progress = 0
 var moving = false
 var rotmargin = 500
