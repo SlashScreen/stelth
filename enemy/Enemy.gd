@@ -4,6 +4,7 @@ extends RigidBody2D
 #onready variables
 onready var player = get_parent().get_node("player") #Reference to player
 onready var target: Vector2 = get_position() #Where the guard is planning to go next.
+onready var nextPoint : Vector2
 #Public variables
 export var state = "IDLE" #State machine. States are "IDLE","HUH","CURIOUS","FOUND"
 export var last_seen = Vector2()
@@ -21,7 +22,10 @@ const HUH_MAX = 5
 const SNAP_DIST = 10
 const SPEED = 40
 const PATROL_SPEED = 20
+const TARGET_CHECK_TIMER_MAX = .1
 #Internal variables
+var targetCache: Vector2 #stores target
+var targetCheckTimer = 0 #timer for recalculating path
 var compatriots = [] #list of all fellow guards, looped for communication
 var sightDistance = 1000
 var patrolPath
@@ -36,9 +40,10 @@ var flashlightSpeed = .25
 var flashlightAmplitude = 2
 var path #ASTAR path to follow.
 var progress = 0 #Progress along patrol path
-var starPathProgress = 1 #progress along navigated path
+var starPathProgress = 0 #progress along navigated path
 
 func _ready():
+	$debugline.set_as_toplevel(true)
 	#Set default alert level based on personality type
 	match personality:
 		"LAZY":
@@ -197,16 +202,23 @@ func _process(delta):
 	#The rigidbody is then provided an impulse to move in "go" direction.
 	
 	#Calculate path to taget using the navigator node
-	genPath()
+	if targetCheckTimer < TARGET_CHECK_TIMER_MAX:
+		targetCheckTimer += delta
+	else:
+		targetCheckTimer = 0
+		if targetCache != target:
+			genPath()
+			targetCache = target
 	#if the enemy is close enough to the next point (Close enough defined by SNAP_DIST),
 	#don't bother moving.
 	#But if not, calculate go. 
-	if get_position().distance_to(path[1]) > SNAP_DIST:
-		go = get_position().direction_to(path[1]).normalized()
+	if get_position().distance_to(nextPoint) > SNAP_DIST:
+		go = get_position().direction_to(nextPoint).normalized()
 	else:
 		go = Vector2()
-		#if starPathProgress <= path.size()-1:
-			#starPathProgress += 1
+		if starPathProgress+1 <= path.size():
+			starPathProgress += 1
+			nextPoint = path[starPathProgress-1]
 	
 	if go != Vector2(0,0):
 			direction = go.normalized()
@@ -266,5 +278,7 @@ func swingFlashlight(delta):
 	angle += flashlightSwingCurve.interpolate(flashlightInterp) * flashlightAmplitude
 
 func genPath():
-	starPathProgress = 1
-	path = get_parent().get_node("Nav").get_simple_path(get_position(),target)
+	starPathProgress = 0
+	path = get_parent().get_node("Nav").get_simple_path(get_position(),target, false)
+	$debugline.set_points(path)
+	nextPoint = path[starPathProgress]
