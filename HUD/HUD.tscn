@@ -59,10 +59,11 @@ __meta__ = {
 }
 
 [node name="Subtitles" type="Label" parent="."]
-margin_left = 308.166
-margin_top = 516.386
-margin_right = 348.166
-margin_bottom = 530.386
+margin_left = 453.92
+margin_top = 530.268
+margin_right = 493.92
+margin_bottom = 544.268
+grow_horizontal = 2
 grow_vertical = 0
 align = 1
 __meta__ = {

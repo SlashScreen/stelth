@@ -298,3 +298,7 @@ func genPath():
 
 func reg_subtitle(sub,dur):
 	get_tree().get_root().get_node("/root/sceneManager").add_subtitle(sub,dur)
+
+func rand_point_in_circle(r):
+	var a = rand_range(0.0,1.0)
+	return Vector2(cos(a),sin(a)) * rand_range(0.0,1.0) * r
