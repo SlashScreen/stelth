@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://enemy/Enemy.gd" type="Script" id=1]
-[ext_resource path="res://assets/Guard_Flashlight_v1.png" type="Texture" id=2]
+[ext_resource path="res://assets/flaslight2.png" type="Texture" id=2]
 [ext_resource path="res://enemy/Flashlight.gd" type="Script" id=3]
 [ext_resource path="res://testassets/test_curve_notex.tres" type="Curve" id=4]
 
