@@ -57,4 +57,13 @@ rect_scale = Vector2( 5, 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Subtitles" type="Label" parent="."]
+margin_left = 309.554
+margin_top = 544.149
+margin_right = 349.554
+margin_bottom = 558.149
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="continuebutton" to="." method="_on_continue_pressed"]

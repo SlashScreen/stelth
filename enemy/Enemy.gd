@@ -137,6 +137,8 @@ func _process(delta):
 					searchTimer = 0
 				elif distprop < (1.0/3.0):
 					state = "FOUND"
+					#TODO: make dialog based on like, a json file or someting.
+					reg_subtitle("There's someone here!",3)
 					print("immediate find")
 			"HUH":
 				#HUH means the guard is looking at where they Think they saw the player
@@ -147,6 +149,7 @@ func _process(delta):
 					searchTimer = 0
 				elif distprop < (1.0/3.0):
 					state = "FOUND"
+					reg_subtitle("There's someone here!",3)
 					print("immediate find-huh")
 			"CURIOUS":
 				#If sees player, move toward player and count up timer
@@ -154,19 +157,21 @@ func _process(delta):
 				#Alert level affects time window player has to avoid detection- higher alert level means guards are more wary
 				if distprop < (1.0/3.0):
 					state = "FOUND"
+					
 					print("immediate find-huh")
 					
 				if searchTimer <= CURIOUS_TIMER_MAX - alert:
 					searchTimer += delta
 				else:
 					state = "FOUND"
+					reg_subtitle("There's someone here!",3)
 				target = ppos
 			"FOUND":
 				#If sees player and found, reset timer used for losing the player
 				#And also track player
 				for g in compatriots:
 					get_tree().get_root().get_node("level").playerWasSeen = true
-					print("alerting another guard")
+					#print("alerting another guard")
 					g.alert(ppos)
 				seenTimer = SEARCHING_TIMER
 				target = ppos
@@ -234,7 +239,7 @@ func _process(delta):
 
 func alert(pos):
 	#alerts all guards to position
-	print("alerted by another guard")
+	#print("alerted by another guard")
 	state = "FOUND"
 	seenTimer = SEARCHING_TIMER
 	target = pos
@@ -287,3 +292,6 @@ func genPath():
 		path = get_parent().get_node("Nav").get_simple_path(get_position(),target, false)
 	$debugline.set_points(path)
 	nextPoint = path[starPathProgress]
+
+func reg_subtitle(sub,dur):
+	get_tree().get_root().get_node("/root/sceneManager").add_subtitle(sub,dur)
