@@ -44,6 +44,9 @@ var starPathProgress = 0 #progress along navigated path
 
 func _ready():
 	$debugline.set_as_toplevel(true)
+	reg_subtitle("test1",1)
+	reg_subtitle("test2",5)
+	
 	#Set default alert level based on personality type
 	match personality:
 		"LAZY":

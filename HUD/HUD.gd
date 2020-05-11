@@ -56,9 +56,11 @@ func _on_continue_pressed():
 
 func add_subtitle(string,duration):
 	#duration in seconds
-	subtitles[string] = {}
-	subtitles[string]["dur"] = duration
-	subtitles[string]["timer"] = 0
+	var time = OS.get_ticks_usec()
+	subtitles[time] = {}
+	subtitles[time]["string"] = string
+	subtitles[time]["dur"] = duration
+	subtitles[time]["timer"] = 0
 	recalc_cache = true
 
 func handle_subs(delta):
@@ -75,8 +77,8 @@ func handle_subs(delta):
 		recalc_cache = false
 		#TODO: Add color?...
 		var activesubs = [] #This is the text we need to display
-		for k in subtitles.keys(): #Adds all of the sub keys to the list to render
-			activesubs.append(k)
+		for k in subtitles.values(): #Adds all of the sub keys to the list to render
+			activesubs.append(k["string"])
 		#Rendering
 		var out = "" #Define string
 		for s in activesubs: #Loop through subs
