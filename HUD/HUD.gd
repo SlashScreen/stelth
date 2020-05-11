@@ -55,21 +55,40 @@ func _on_continue_pressed():
 		
 
 func add_subtitle(string,duration):
-	#duration in seconds
-	var time = OS.get_ticks_usec()
-	subtitles[time] = {}
+	#duration is in seconds
+	var time = OS.get_ticks_usec() #Create a unique ID
+	subtitles[time] = {} #Init sub dict
 	subtitles[time]["string"] = string
 	subtitles[time]["dur"] = duration
 	subtitles[time]["timer"] = 0
-	recalc_cache = true
+	recalc_cache = true #set recalculation flag
 
 func handle_subs(delta):
+	#This is the subtitling system. 
+	#Erik, falls du diese Nachricht lesen, Halt die Klappe. Es ist nicht für dich. "Zu viel wörter" existiert nicht hier.
+	#Egal falls du diese Kommente lesen- es ist nicht kompliziert, aber, nicht almand in mein Kopf sind.
+	
+	#HOW IT WORKS:
+	#Each subtitle is a dictionary entry (could be a class, but whatever, it works).
+	#Each entry has a sring, timer, and maximum duration.
+	#Each entry's key is an ID number, defined by the OS' tick cycle when it reaches that process.
+	#This is so every subtitle is unique, even if it has the same data.
+	
+	#For every frame in the process node, the following happens:
+	#We loop through all current entry, and count up their timers. If the timer reaches the value defined by
+	#that entry's maximum value, that subtitle is deleted, and the script is given the flag to re-render the text, explained later.
+	#The "Subtitles" label retains its own text, so if nothing is happening, we don't need to recalculate it.
+	#to recalculate, we set the "recalc_cache" flag to true. This will re-render the text, and send it to the label.
+	
+	#To render it, we get the text from all active subtitles, and then put them together in a long string with newlines
+	#between each subtitle, and pass it to the label.
+	
 	for key in subtitles.keys():
 		var sub = subtitles[key]
 		#for each in subtitles
 		sub["timer"] += delta #increment timer
 		#if timer ran out
-		if sub["timer"] > sub["dur"]:
+		if sub["timer"] >= sub["dur"]:
 			recalc_cache = true #rerender and recache later in loop
 			subtitles.erase(key)
 	#If we need to recalculate the subtitles...
