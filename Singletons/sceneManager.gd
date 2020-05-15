@@ -37,11 +37,13 @@ func subtitle_engine(page, id):
 	#else
 	#get first in lines
 	#calculate time by length
+	print(id)
 	var workingScript
 	var rng = RandomNumberGenerator.new()
 	match page: #hello hardcoding, my old friend
 		"guard":
 			workingScript = guardScript
+	
 	var out
 	if workingScript[id]["randomized"]: #if randomized, return random entry from lines
 		out = workingScript[id]["lines"][rng.randi_range(0 , len( workingScript[id]["lines"]) -1 )]

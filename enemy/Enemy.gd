@@ -129,45 +129,31 @@ func _process(delta):
 				#If < 1/3, the guard immediatley "finds" the player.
 				if distprop > (2.0/3.0):
 					if alert == 0:
-						state = "HUH"
-						angle = rad2deg(get_position().angle_to_point(ppos)) #Whete the guard "Thought I saw something"
-						huhTimer = 0 #Reset HUH timer
+						set_state("huh")
 					else:
-						state = "CURIOUS"
-						searchTimer = 0
+						set_state("search")
 				elif distprop <= (2.0/3.0) and distance/sightDistance >= (1.0/3.0):
-					state = "CURIOUS"
-					searchTimer = 0
+					set_state("search")
 				elif distprop < (1.0/3.0):
-					state = "FOUND"
-					#TODO: make dialog based on like, a json file or someting.
-					reg_subtitle("immediate_find")
-					print("immediate find")
+					set_state("immediate_find")
 			"HUH":
 				#HUH means the guard is looking at where they Think they saw the player
 				#This is basically identical to the IDLE block, except that there is no "huh?" mode, for obvious reasons
 				
 				if distprop <= (2.0/3.0) and distance/sightDistance >= (1.0/3.0):
-					state = "CURIOUS"
-					searchTimer = 0
+					set_state("search")
 				elif distprop < (1.0/3.0): #immediate find
-					state = "FOUND"
-					reg_subtitle("immediate_find")
-					print("immediate find-huh")
+					set_state("immediate_find")
 			"CURIOUS":
 				#If sees player, move toward player and count up timer
 				#If timer at max, then the guard has found the player.
 				#Alert level affects time window player has to avoid detection- higher alert level means guards are more wary
 				if distprop < (1.0/3.0):
-					state = "FOUND"
-					
-					print("immediate find-huh")
-					
+					set_state("immediate_find")
 				if searchTimer <= CURIOUS_TIMER_MAX - alert:
 					searchTimer += delta
 				else:
-					state = "FOUND"
-					reg_subtitle("find")
+					set_state("find")
 				target = ppos
 			"FOUND":
 				#If sees player and found, reset timer used for losing the player
@@ -189,8 +175,7 @@ func _process(delta):
 					if is_at_target(): 
 						searchTimer -= delta
 				else:
-					state = "IDLE"
-					target = patrolPath.get_current_point(name)
+					set_state("lose_after_huh")
 			"FOUND":
 				#If does not see player, count down timer
 				#If timer at 0, then revert to curious state, set alert level
@@ -200,7 +185,7 @@ func _process(delta):
 				if seenTimer > 0:
 					seenTimer -= delta
 				else:
-					state = "CURIOUS"
+					set_state("lose_after_search")
 	
 	#print(state)
 	#MOVEMENT LOOP
@@ -297,9 +282,42 @@ func genPath():
 	nextPoint = path[starPathProgress]
 
 func reg_subtitle(id):
-	var res = sceneManager.subtitle_engine("guard","immediate_find")
+	var res = sceneManager.subtitle_engine("guard",id)
 	sceneManager.add_subtitle(res[0],res[1]) #parse list of args, 0 is payload, 1 is duration
 
 func rand_point_in_circle(r):
 	var a = rand_range(0.0,1.0)
 	return Vector2(cos(a),sin(a)) * rand_range(0.0,1.0) * r
+
+func set_state(s):
+	print("State set to " + s)
+	match s:
+		"huh": #Player in peripherals
+			state = "HUH"
+			angle = rad2deg(get_position().angle_to_point(player.get_position())) #Whete the guard "Thought I saw something"
+			huhTimer = 0 #Reset HUH timer
+			reg_subtitle("huh")
+		"search": #Searching for player
+			state = "CURIOUS"
+			searchTimer = 0
+			reg_subtitle("investigate")
+		"immediate_find": #Player found by walkign too close to the guard
+			state = "FOUND"
+			reg_subtitle("immediate_find")
+			print("immediate find")
+		"refind": #player found again
+			state = "FOUND"
+			reg_subtitle("refound_player")
+		"find": #Player is found by a guard normally
+			if get_tree().get_root().get_node("level").playerWasSeen:
+				set_state("refind")
+				return
+			state = "FOUND"
+			reg_subtitle("find")
+		"lose_after_search": #player loses guards after search
+			state = "CURIOUS"
+			reg_subtitle("lost_player")
+		"lose_after_huh":
+			state = "IDLE"
+			reg_subtitle("nothing_found")
+			target = patrolPath.get_current_point(name)
