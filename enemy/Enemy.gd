@@ -46,6 +46,7 @@ var path #ASTAR path to follow.
 var progress = 0 #Progress along patrol path
 var starPathProgress = 0 #progress along navigated path
 var attackTimer = 0
+var attacktracking = true
 #NTS: when attacktimer reaches a certain point, decide which attack to use
 #if within radius, meelee
 #else, tazer
@@ -53,6 +54,7 @@ var attackTimer = 0
 func _ready():
 	#set up path line
 	$debugline.set_as_toplevel(true)
+	$TazerLine.set_as_toplevel(true)
 	#set flashlight size
 	#Set default alert level based on personality type
 	match personality:
@@ -171,6 +173,7 @@ func _process(delta):
 					g.alert(ppos)
 				seenTimer = SEARCHING_TIMER
 				target = ppos
+				determineAttackPlayer(delta)
 	elif not canSeePlayer(): #If does not see player
 		match state:
 			"CURIOUS":
@@ -322,26 +325,30 @@ func set_state(s):
 			state = "FOUND"
 			reg_subtitle("find")
 		"lose_after_search": #player loses guards after search
+			attackTimer = 0
 			state = "CURIOUS"
 			reg_subtitle("lost_player")
 		"lose_after_huh":
+			attackTimer = 0
 			state = "IDLE"
 			reg_subtitle("nothing_found")
 			target = patrolPath.get_current_point(name)
 
-func attackPlayer():
+func determineAttackPlayer(delta):
 	#TODO: set width based on time to fire
 	#TODO: allow a window of time to dodge
-	if attackTimer >= ATTACK_LIMIT:
-		if get_position().distance_to(player.get_position()) > MEELEE_RADIUS:
-			var pnts = []
-			pnts[0] = get_position()
-			pnts[1] = player.get_position()
+	attackTimer += delta
+	if attackTimer >= TAZER_WARNING:
+		if get_position().distance_to(target) > MEELEE_RADIUS:
+			var pnts : PoolVector2Array
+			pnts.append(get_position())
+			pnts.append(target)
 			$TazerLine.set_points(pnts)
 		else:
 			$TazerLine.set_points([])
 	if attackTimer >= ATTACK_LIMIT:
-		if get_position().distance_to(player.get_position()) < MEELEE_RADIUS:
+		attackTimer = 0
+		if get_position().distance_to(target) < MEELEE_RADIUS:
 			player.ko("meelee")
 		elif canSeePlayer():
 			player.ko("tazer")

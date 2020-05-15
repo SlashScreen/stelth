@@ -165,4 +165,4 @@ func _on_game_won():
 
 func ko (method): #ko = knock out
 	#method is a sting that will eventually determine what animation to play
-	can_control = false
+	movable = false
