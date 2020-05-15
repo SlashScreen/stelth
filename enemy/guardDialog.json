@@ -1,0 +1,57 @@
+{
+	"immediate_find":{
+		"randomized":false,
+		"lines":[
+			"Woah! There's someone here!"
+		]
+	},
+	"investigate":{
+		"randomized":true,
+		"lines":[
+			"I think I saw something, I'm going to investigate."
+		]
+	},
+	"nothing_found":{
+		"randomized":true,
+		"lines":[
+			"Guess it was nothing.",
+			"I didn't see anything.",
+			"Guess I was just imagining things."
+		]
+	},
+	"huh":{
+		"randomized":true,
+		"lines":[
+			"Huh?",
+			"Is something there?"
+		]
+	},
+	"lost_player":{
+		"randomized":false,
+		"lines":[
+			"I lost 'em!",
+			"Where'd they go?"
+		]
+	},
+	"refound_player":{
+		"randomized":true,
+		"lines":[
+			"There you are!",
+			"I found 'em!"
+		]
+	},
+	"idle":{
+		"randomized":true,
+		"lines":[
+			"[Whistling]",
+			"I want to go home..."
+		]
+	},
+	"find":{
+		"randomized":false,
+		"lines":[
+			"I found an intruder!"
+		]
+	}
+
+}

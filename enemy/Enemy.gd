@@ -3,6 +3,7 @@ extends RigidBody2D
 
 #onready variables
 onready var player = get_parent().get_node("player") #Reference to player
+onready var sceneManager = get_tree().get_root().get_node("/root/sceneManager") #reference to scene manager
 onready var target: Vector2 = get_position() #Where the guard is planning to go next.
 onready var nextPoint : Vector2
 #Public variables
@@ -140,7 +141,7 @@ func _process(delta):
 				elif distprop < (1.0/3.0):
 					state = "FOUND"
 					#TODO: make dialog based on like, a json file or someting.
-					reg_subtitle("There's someone here!",3)
+					reg_subtitle("immediate_find")
 					print("immediate find")
 			"HUH":
 				#HUH means the guard is looking at where they Think they saw the player
@@ -149,9 +150,9 @@ func _process(delta):
 				if distprop <= (2.0/3.0) and distance/sightDistance >= (1.0/3.0):
 					state = "CURIOUS"
 					searchTimer = 0
-				elif distprop < (1.0/3.0):
+				elif distprop < (1.0/3.0): #immediate find
 					state = "FOUND"
-					reg_subtitle("There's someone here!",3)
+					reg_subtitle("immediate_find")
 					print("immediate find-huh")
 			"CURIOUS":
 				#If sees player, move toward player and count up timer
@@ -166,7 +167,7 @@ func _process(delta):
 					searchTimer += delta
 				else:
 					state = "FOUND"
-					reg_subtitle("There's someone here!",3)
+					reg_subtitle("find")
 				target = ppos
 			"FOUND":
 				#If sees player and found, reset timer used for losing the player
@@ -295,8 +296,9 @@ func genPath():
 	$debugline.set_points(path)
 	nextPoint = path[starPathProgress]
 
-func reg_subtitle(sub,dur):
-	get_tree().get_root().get_node("/root/sceneManager").add_subtitle(sub,dur)
+func reg_subtitle(id):
+	var res = sceneManager.subtitle_engine("guard","immediate_find")
+	sceneManager.add_subtitle(res[0],res[1]) #parse list of args, 0 is payload, 1 is duration
 
 func rand_point_in_circle(r):
 	var a = rand_range(0.0,1.0)
