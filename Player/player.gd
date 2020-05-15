@@ -63,6 +63,9 @@ func _process(delta):
 				go.x = -1
 			if Input.is_action_pressed("right"):
 				go.x = 1
+			#knock
+			if Input.is_action_just_pressed("knock"):
+				$Knock.play_noise()
 			#Sneak
 			#If sneak button is pressed, reduce speed and restrict visiom
 			if Input.is_action_just_pressed("sneak") and not citizen:
@@ -159,3 +162,7 @@ func _on_game_won():
 	#on game won, relinquish all movement. 
 	#This might tie into a cutscene system later.
 	movable = false
+
+func ko (method): #ko = knock out
+	#method is a sting that will eventually determine what animation to play
+	can_control = false

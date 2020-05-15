@@ -45,3 +45,5 @@ swingCurve = ExtResource( 4 )
 visible = false
 width = 5.0
 default_color = Color( 0.968627, 0.0196078, 1, 1 )
+
+[node name="TazerLine" type="Line2D" parent="."]

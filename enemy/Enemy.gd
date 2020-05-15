@@ -24,6 +24,9 @@ const SNAP_DIST = 15
 const SPEED = 40
 const PATROL_SPEED = 20
 const TARGET_CHECK_TIMER_MAX = .1
+const TAZER_WARNING = 1
+const ATTACK_LIMIT = 3
+const MEELEE_RADIUS = 50
 #Internal variables
 var targetCache: Vector2 #stores target
 var targetCheckTimer = 0 #timer for recalculating path
@@ -42,6 +45,10 @@ var flashlightAmplitude = 2
 var path #ASTAR path to follow.
 var progress = 0 #Progress along patrol path
 var starPathProgress = 0 #progress along navigated path
+var attackTimer = 0
+#NTS: when attacktimer reaches a certain point, decide which attack to use
+#if within radius, meelee
+#else, tazer
 
 func _ready():
 	#set up path line
@@ -321,3 +328,20 @@ func set_state(s):
 			state = "IDLE"
 			reg_subtitle("nothing_found")
 			target = patrolPath.get_current_point(name)
+
+func attackPlayer():
+	#TODO: set width based on time to fire
+	#TODO: allow a window of time to dodge
+	if attackTimer >= ATTACK_LIMIT:
+		if get_position().distance_to(player.get_position()) > MEELEE_RADIUS:
+			var pnts = []
+			pnts[0] = get_position()
+			pnts[1] = player.get_position()
+			$TazerLine.set_points(pnts)
+		else:
+			$TazerLine.set_points([])
+	if attackTimer >= ATTACK_LIMIT:
+		if get_position().distance_to(player.get_position()) < MEELEE_RADIUS:
+			player.ko("meelee")
+		elif canSeePlayer():
+			player.ko("tazer")
