@@ -47,6 +47,7 @@ var progress = 0 #Progress along patrol path
 var starPathProgress = 0 #progress along navigated path
 var attackTimer = 0
 var attacktracking = true
+var tracker = target
 #NTS: when attacktimer reaches a certain point, decide which attack to use
 #if within radius, meelee
 #else, tazer
@@ -336,19 +337,25 @@ func set_state(s):
 
 func determineAttackPlayer(delta):
 	#TODO: set width based on time to fire
-	#TODO: allow a window of time to dodge
+	if attacktracking:
+		tracker = target
 	attackTimer += delta
 	if attackTimer >= TAZER_WARNING:
-		if get_position().distance_to(target) > MEELEE_RADIUS:
+		if get_position().distance_to(tracker) > MEELEE_RADIUS:
 			var pnts : PoolVector2Array
 			pnts.append(get_position())
-			pnts.append(target)
+			pnts.append(tracker)
 			$TazerLine.set_points(pnts)
+			$TazerLine.set_width((attackTimer/TAZER_WARNING)*10)
 		else:
 			$TazerLine.set_points([])
+	if attackTimer >= ATTACK_LIMIT-.2: #This is the time window
+		attacktracking = false
 	if attackTimer >= ATTACK_LIMIT:
 		attackTimer = 0
-		if get_position().distance_to(target) < MEELEE_RADIUS:
+		attacktracking = true
+		if get_position().distance_to(tracker) < MEELEE_RADIUS:
 			player.ko("meelee")
-		elif canSeePlayer():
+		elif canSeePlayer() and tracker.distance_to(target) < 25:
 			player.ko("tazer")
+			$TazerLine.set_points([])
