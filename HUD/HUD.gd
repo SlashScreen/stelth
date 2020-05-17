@@ -105,4 +105,11 @@ func handle_subs(delta):
 		#set text
 		$Subtitles.set_text(out)
 		
-			
+		
+func _on_Restart_pressed():
+	get_tree().reload_current_scene()
+
+func now_dead():
+	$Darkscreen.show()
+	$FailText.show()
+	$Restart.show()

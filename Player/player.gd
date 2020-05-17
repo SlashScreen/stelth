@@ -166,3 +166,4 @@ func _on_game_won():
 func ko (method): #ko = knock out
 	#method is a sting that will eventually determine what animation to play
 	movable = false
+	$Camera/HUD.now_dead()
