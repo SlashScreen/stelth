@@ -1,8 +1,39 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Misc scripts/level.gd" type="Script" id=1]
 [ext_resource path="res://WorldMap/Prototyping_Set.tres" type="TileSet" id=2]
 [ext_resource path="res://Player/player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Guardpath/Guardpath.tscn" type="PackedScene" id=4]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 1105.13, 33.3002, 0, 0, 0, 0, 1742.56, 31.2239, 0, 0, 0, 0, 1748.79, 99.7417, 0, 0, 0, 0, 1107.21, 95.5891, 0, 0, 0, 0, 1105.13, 33.3002 )
+}
+
+[sub_resource type="Curve2D" id=2]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 1492.58, 684.122, 0, 0, 0, 0, 1497.46, 294.489, 0, 0, 0, 0, 1857.87, 299.36, 0, 0, 0, 0, 1853, 681.687, 0, 0, 0, 0, 1492.58, 684.122 )
+}
+
+[sub_resource type="Curve2D" id=3]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 1440.68, 1221.88, 0, 0, 0, 0, 1446.11, 766.057, 0, 0, 0, 0, 1367.43, 760.63, 0, 0, 0, 0, 1367.43, 1221.88, 0, 0, 0, 0, 1440.68, 1221.88 )
+}
+
+[sub_resource type="Curve2D" id=4]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 1158.51, 1221.88, 0, 0, 0, 0, 1166.65, 776.91, 0, 0, 0, 0, 1082.54, 776.91, 0, 0, 0, 0, 1077.11, 1202.88, 0, 0, 0, 0, 1077.11, 1202.88, 0, 0, 0, 0, 1158.51, 1221.88 )
+}
+
+[sub_resource type="Curve2D" id=5]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 881.762, 1243.58, 0, 0, 0, 0, 887.189, 787.762, 0, 0, 0, 0, 803.079, 793.189, 0, 0, 0, 0, 800.366, 1240.87, 0, 0, 0, 0, 881.762, 1243.58 )
+}
+
+[sub_resource type="Curve2D" id=6]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 1565.87, 3078.97, 0, 0, 0, 0, 1570.5, 2863.77, 0, 0, 0, 0, 1457.11, 2870.71, 0, 0, 0, 0, 1461.74, 3072.03, 0, 0, 0, 0, 1565.87, 3078.97 )
+}
 
 [node name="level" type="Node2D"]
 script = ExtResource( 1 )
@@ -110,3 +141,32 @@ text = "Head for the exit!"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Paths" type="Node2D" parent="."]
+
+[node name="Guardpath" parent="Paths" instance=ExtResource( 4 )]
+curve = SubResource( 1 )
+
+[node name="Guardpath2" parent="Paths" instance=ExtResource( 4 )]
+position = Vector2( 718.642, 210.977 )
+curve = SubResource( 2 )
+
+[node name="Guardpath3" parent="Paths" instance=ExtResource( 4 )]
+curve = SubResource( 3 )
+
+[node name="Guardpath4" parent="Paths" instance=ExtResource( 4 )]
+curve = SubResource( 4 )
+
+[node name="Guardpath5" parent="Paths" instance=ExtResource( 4 )]
+curve = SubResource( 5 )
+
+[node name="Guardpath6" parent="Paths" instance=ExtResource( 4 )]
+curve = SubResource( 6 )
+
+[node name="Guardpath7" parent="Paths" instance=ExtResource( 4 )]
+position = Vector2( -289.255, 9.2561 )
+curve = SubResource( 6 )
+
+[node name="Guardpath8" parent="Paths" instance=ExtResource( 4 )]
+position = Vector2( -566.939, 11.5701 )
+curve = SubResource( 6 )
