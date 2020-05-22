@@ -1,9 +1,11 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Misc scripts/level.gd" type="Script" id=1]
 [ext_resource path="res://WorldMap/Prototyping_Set.tres" type="TileSet" id=2]
 [ext_resource path="res://Player/player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Guardpath/Guardpath.tscn" type="PackedScene" id=4]
+[ext_resource path="res://enemy/Enemy.tscn" type="PackedScene" id=5]
+[ext_resource path="res://item/item.tscn" type="PackedScene" id=6]
 
 [sub_resource type="Curve2D" id=1]
 _data = {
@@ -33,6 +35,16 @@ _data = {
 [sub_resource type="Curve2D" id=6]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 1565.87, 3078.97, 0, 0, 0, 0, 1570.5, 2863.77, 0, 0, 0, 0, 1457.11, 2870.71, 0, 0, 0, 0, 1461.74, 3072.03, 0, 0, 0, 0, 1565.87, 3078.97 )
+}
+
+[sub_resource type="Curve2D" id=7]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 1972.79, 1652.97 )
+}
+
+[sub_resource type="Curve2D" id=8]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 2362.93, 1661.84 )
 }
 
 [node name="level" type="Node2D"]
@@ -170,3 +182,40 @@ curve = SubResource( 6 )
 [node name="Guardpath8" parent="Paths" instance=ExtResource( 4 )]
 position = Vector2( -566.939, 11.5701 )
 curve = SubResource( 6 )
+
+[node name="Guardpath9" parent="Paths" instance=ExtResource( 4 )]
+curve = SubResource( 7 )
+
+[node name="Guardpath10" parent="Paths" instance=ExtResource( 4 )]
+curve = SubResource( 8 )
+
+[node name="item" parent="." instance=ExtResource( 6 )]
+position = Vector2( 948.137, 1622.77 )
+
+[node name="Enemy" parent="." instance=ExtResource( 5 )]
+position = Vector2( 1796.17, 85.5321 )
+patrolPathRef = "Paths/Guardpath"
+
+[node name="Enemy2" parent="." instance=ExtResource( 5 )]
+position = Vector2( 2544.58, 908.778 )
+patrolPathRef = "Paths/Guardpath2"
+
+[node name="Enemy3" parent="." instance=ExtResource( 5 )]
+position = Vector2( 1475.43, 1208.14 )
+patrolPathRef = "Paths/Guardpath3"
+
+[node name="Enemy4" parent="." instance=ExtResource( 5 )]
+position = Vector2( 1176.07, 1213.49 )
+patrolPathRef = "Paths/Guardpath4"
+
+[node name="Enemy5" parent="." instance=ExtResource( 5 )]
+position = Vector2( 887.395, 1218.83 )
+patrolPathRef = "Paths/Guardpath5"
+
+[node name="Enemy6" parent="." instance=ExtResource( 5 )]
+position = Vector2( 2068.91, 1672.54 )
+patrolPathRef = "Paths/Guardpath9"
+
+[node name="Enemy7" parent="." instance=ExtResource( 5 )]
+position = Vector2( 2542.87, 1665.53 )
+patrolPathRef = "Paths/Guardpath10"

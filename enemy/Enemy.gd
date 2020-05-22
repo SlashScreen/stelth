@@ -13,7 +13,7 @@ export var FOV = 90 #FOV of vision cone. Degrees.
 export var alert = 0 #ALERT LEVEL: How wary guards are. Alert affects: whether guards will enter the "huh?" state, how long the player has before they are spotted.
 export var flashlightSwingCurve: Curve #Flashlight motion curve
 export var patrolPathRef: String
-export var personality: String #Personality type: determines innate wariness of each guard, as well as
+export var personality = "NORMAL" #Personality type: determines innate wariness of each guard, as well as
 #the sprite, dialog, and animations used. the 3 types are "NORMAL", "LAZY", and "SCARDEYCAT".
 
 #Constans
